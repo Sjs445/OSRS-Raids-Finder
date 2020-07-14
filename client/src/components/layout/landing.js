@@ -19,8 +19,8 @@ class Landing extends Component {
                     <h1>Welcome to the OSRS Raids Finder</h1>
                     <Container>
                         <Row>
-                            <Col sm={{ size: 'auto', offset: 1 }}><Button color="secondary" size="lg" className={styles.btn_home}>Register</Button></Col>
-                            <Col sm={{ size: 'auto', offset: 1 }}><Button color="secondary" size="lg" className={styles.btn_home}>Login</Button></Col>
+                            <Col sm={{ size: 'auto', offset: 1 }}><Link to="/register"><Button color="secondary" size="lg" className={styles.btn_home}>Register</Button></Link></Col>
+                            <Col sm={{ size: 'auto', offset: 1 }}><Link to="/login"><Button color="secondary" size="lg" className={styles.btn_home}>Login</Button></Link></Col>
                             <Col sm={{ size: 'auto', offset: 1 }}><Button color="secondary" size="lg" className={styles.btn_home} href="#about">See More</Button></Col>
                         </Row>
                     </Container>
