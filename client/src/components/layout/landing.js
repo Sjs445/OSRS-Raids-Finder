@@ -42,7 +42,7 @@ class Landing extends Component {
                     </p>
                     <h2>Follow us for updates</h2>
                     <div className={styles.social}>
-                    <a href="https://github.com/sjs445" target="_blank" rel="noopener noreferrer"><span><i className="fab fa-github fa-3x"></i></span></a>
+                    <a href="https://github.com/Sjs445/OSRS-Raids-Finder" target="_blank" rel="noopener noreferrer"><span><i className="fab fa-github fa-3x"></i></span></a>
                     <a href="https://discord.gg/3WDXJ9c" target="_blank" rel="noopener noreferrer"><span><i className="fab fa-discord fa-3x" aria-hidden="true"></i></span></a>
                     <a href="https://twitter.com/ZimsEdits" target="_blank" rel="noopener noreferrer"><span><i className="fab fa-twitter fa-3x" aria-hidden="true"></i></span></a>
                     </div>
