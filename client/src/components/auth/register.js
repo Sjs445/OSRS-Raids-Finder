@@ -57,13 +57,13 @@ class Register extends Component {
                     <Form noValidate onSubmit={this.onSubmit}>
                         <Col>
                         <FormGroup>
-                            <Label for="name">Name</Label>
-                            <Input type="text" name="name" id="name" placeholder="Bob" onChange={this.onChange} value={this.state.name} error={errors.email} />
+                            <Label for="name"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Name</Label>
+                            <Input type="text" name="name" id="name" placeholder="Bob" onChange={this.onChange} value={this.state.name} error={errors.email}/>
                         </FormGroup>
                         </Col>
                         <Col>
                             <FormGroup>
-                                <Label for="email">Email</Label>
+                                <Label for="email"><i className="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email</Label>
                                 <Input type="email" name="email" id="email" placeholder="email@example.com"
                                 value={this.state.email}
                                 error={errors.email}
@@ -77,16 +77,16 @@ class Register extends Component {
                         </Col>
                         <Col>
                             <FormGroup>
-                                <Label for="password">Password</Label>
-                                <Input type="password" name="password" id="password" placeholder="********" 
+                                <Label for="password"><i className="fa fa-lock"></i>&nbsp;Password</Label>
+                                <Input type="password" name="password" id="password" placeholder="********"
                                 onChange={this.onChange}
                                 value={ this.state.password} 
                                 error={errors.password} />
                                 <FormText>Password needs to be at least six characters.</FormText>
                             </FormGroup>
                             <FormGroup>
-                                <Label for="password2">Confirm Password</Label>
-                                <Input type="password" name="password2" id="password2" placeholder="********" 
+                                <Label for="password2"><i className="fa fa-lock"></i>&nbsp;Confirm Password</Label>
+                                <Input type="password" name="password2" id="password2" placeholder="********"
                                 onChange={this.onChange}
                                 value={ this.state.password2 }
                                 error={errors.password2} />
@@ -94,11 +94,12 @@ class Register extends Component {
                         </Col>
                         <Col>
                             <FormGroup>
-                                <Label for="rsn">RSN</Label>
+                                <Label for="rsn"><i class="fa fa-tag" aria-hidden="true"></i>&nbsp;RSN</Label>
                                 <Input type="text" name="rsn" id="rsn" placeholder="Zezima"
                                 onChange={this.onChange}
                                 value={this.state.rsn}
                                 error={errors.rsn} />
+                                <FormText>Other users will see you based on RSN.</FormText>
                             </FormGroup>
                         </Col>
                         <Col>

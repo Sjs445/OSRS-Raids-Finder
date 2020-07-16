@@ -47,12 +47,13 @@ class Login extends Component {
         return(
             <div>
                 <Container>
+                    <Col>
                         <h1>Login</h1>
                         <Link to="/"><Button color="link">Back to home</Button></Link>
                         <Form noValidate onSubmit={this.onSubmit}>
                             <Col>
                             <FormGroup>
-                                <Label for="email">Email</Label>
+                                <Label for="email"><i className="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email</Label>
                                 <Input type="email" name="email" id="email" placeholder="email@example.com" 
                                 value={this.state.email}
                                 error={errors.email}
@@ -67,19 +68,18 @@ class Login extends Component {
                             </Col>
                             <Col>
                             <FormGroup>
-                                <Label for="password">Password</Label>
+                                <Label for="password"><i className="fa fa-lock" aria-hidden="true"></i>&nbsp;Password</Label>
                                 <Input type="password" name="password" id="password" placeholder="********"
                                 value={this.state.password}
                                 error={errors.password}
                                 onChange={this.onChange} />
                             </FormGroup>
-                            </Col>
-                            <Col>
                             <FormGroup>
                                 <Button type="submit" value="Submit">Submit</Button>
                             </FormGroup>
                             </Col>
                         </Form>
+                        </Col>
                 </Container>
             </div>
         )
