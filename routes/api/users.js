@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 //  Needed to connect to our MongoDB server
 const keys = require("../../config/keys");
@@ -48,7 +49,24 @@ router.post("/register", (req, res) =>{
                     if (err) throw err;
                     newUser.password = hash;
                     newUser.save()
-                        .then(user => res.json(user))
+                        .then(user => 
+                            jwt.sign(
+                                {id: user.id },
+                                keys.jwtSecret,
+                                { expiresIn: 3600 },
+                                (err, token) => {
+                                    if(err) throw err;
+                                    res.json({
+                                        token: token,
+                                        user: {
+                                            id: user.id,
+                                            name: user.name,
+                                            email: user.email
+                                        }
+                                    })
+                                }
+                            )                            
+                        )
                         .catch(err => console.log(err));
                 });
             });
@@ -76,7 +94,22 @@ router.post("/login", (req, res) =>{
         else {
             bcrypt.compare(password, user.password, (error, result) => {
                 if(result) {
-                    return res.json( { result: "Login success!" });
+                    jwt.sign(
+                        {id: user.id },
+                        keys.jwtSecret,
+                        { expiresIn: 3600 },
+                        (err, token) => {
+                            if(err) throw err;
+                            res.json({
+                                token: token,
+                                user: {
+                                    id: user.id,
+                                    name: user.name,
+                                    email: user.email
+                                }
+                            })
+                        }
+                    )
                 }
                 else {
                     return res.status(400).json( {error: "Incorrect Password!"});
