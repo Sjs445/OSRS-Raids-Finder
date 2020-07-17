@@ -11,7 +11,7 @@ class Landing extends Component {
             <div>
                 <section className={styles.showcase}>
                 <div className={styles.videoContainer}>
-                <video autoPlay="true" loop>
+                <video autoPlay={true} loop>
                     <source src={cinematic} type="video/mp4" />
                 </video>
                 </div>

@@ -22,7 +22,7 @@ class Register extends Component {
         this.setState({ [e.target.id]: e.target.value})
     };
 
-    onSubmit = e => {
+    onSubmit = async(e) => {
         e.preventDefault();
 
         const newUser = {
@@ -33,7 +33,25 @@ class Register extends Component {
             rsn: this.state.rsn
         }
 
-        console.log(newUser);
+        try{
+            let response = await fetch('/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(newUser)
+            });
+
+            let result = await response.json();
+            if(result) {
+                alert("Thanks for registering "+result.user.name);
+                this.props.history.push("/");
+            }
+        }
+        catch(err) {
+            console.log(err);
+        }
+
     };
 
     validateEmail = e => {
@@ -57,7 +75,7 @@ class Register extends Component {
                     <Form noValidate onSubmit={this.onSubmit}>
                         <Col>
                         <FormGroup>
-                            <Label for="name"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;Name</Label>
+                            <Label for="name"><i className="fa fa-user" aria-hidden="true"></i>&nbsp;Name</Label>
                             <Input type="text" name="name" id="name" placeholder="Bob" onChange={this.onChange} value={this.state.name} error={errors.email}/>
                         </FormGroup>
                         </Col>
@@ -94,7 +112,7 @@ class Register extends Component {
                         </Col>
                         <Col>
                             <FormGroup>
-                                <Label for="rsn"><i class="fa fa-tag" aria-hidden="true"></i>&nbsp;RSN</Label>
+                                <Label for="rsn"><i className="fa fa-tag" aria-hidden="true"></i>&nbsp;RSN</Label>
                                 <Input type="text" name="rsn" id="rsn" placeholder="Zezima"
                                 onChange={this.onChange}
                                 value={this.state.rsn}

@@ -15,11 +15,12 @@ class Login extends Component {
         };
     }
 
+
     onChange = e => {
         this.setState({ [e.target.id]: e.target.value });
     };
 
-    onSubmit = e => {
+    onSubmit = async(e) => {
         e.preventDefault();
 
         const userData = {
@@ -27,7 +28,28 @@ class Login extends Component {
             password: this.state.password
         };
 
-        console.log(userData);
+        try{
+            let response = await fetch('/api/users/login', {
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(userData)
+            });
+            let result = await response.json();
+
+            if(result) {
+                sessionStorage.setItem('token', result.token);
+            }
+        
+            if(sessionStorage.getItem("token")) {
+                // console.log("User has token "+sessionStorage.token);
+                this.props.history.push('/');
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
     }
 
     validateEmail = e => {
