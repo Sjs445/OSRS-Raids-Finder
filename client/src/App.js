@@ -5,6 +5,7 @@ import NavBar from "./components/layout/navbar";
 import Landing from "./components/layout/landing";
 import Register from "./components/auth/register";
 import Login from "./components/auth/login";
+import dashboard from "./components/layout/dashboard";
 
 class App extends Component {
   render() {
@@ -14,6 +15,7 @@ class App extends Component {
           <Route exact path="/" component={Landing} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/dashboard" component={dashboard} />
         </div>
       </Router>
     )
