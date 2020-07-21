@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const auth = require("../../middleware/auth");
 
 //  Needed to connect to our MongoDB server
 const keys = require("../../config/keys");
@@ -119,5 +120,16 @@ router.post("/login", (req, res) =>{
         }
     });
 });
+
+//  @route  GET api/user/data
+//  @desc   Get user data
+//  @access Private
+router.get("/data", auth, (req, res) => {
+    User.findById(req.user.id)
+        .select('-password')
+        .then(user => res.json(user))
+        .catch(err => console.log(err));
+})
+
 
 module.exports = router;

@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const xssFilters = require("xss-filters");
 const users = require("./routes/api/users");
+const party = require("./routes/api/party");
 
 //	CSP for security: Only allows scripts, links, photos from the server itself.
 const csp = require("helmet-csp");
@@ -32,5 +33,6 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
 
 	// Routes
 app.use("/api/users", users);
+app.use("/api/party", party);
 
 app.listen(5000, () => console.log("Backend server up and running on port 5000!"));
