@@ -6,6 +6,8 @@ import { Container, Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import CreatePartyModal from "../modal/createPartyModal";
 
+import NavBar from './navbar';
+
 
 class dashboard extends React.Component {
 constructor(props) {
@@ -22,7 +24,8 @@ componentDidMount() {
     render() {
         const { parties } = this.props.party;
         return (<div>
-            <h1>Welcome to the dashboard</h1>
+            <NavBar />
+            <h1 style={{textAlign: "center", margin: "1rem"}}>Welcome to the dashboard</h1>
             <Container>
                 <CreatePartyModal />              
                 <ListGroup>
@@ -33,6 +36,7 @@ componentDidMount() {
                                 {/* We should only be able to delete the party if the user logged in, is the owner of the party. I.E. whoever
                                 created the party. We should be able to use the first user in the users arr since they are the creator. */}
                                 <Button
+                                    style={{margin: ".5rem"}}
                                     className="remove-btn"
                                     color="danger"
                                     size="sm"
