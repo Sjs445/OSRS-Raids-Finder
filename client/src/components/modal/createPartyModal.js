@@ -3,10 +3,12 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, La
 import { connect } from 'react-redux';
 import { addParty } from '../../actions/partyActions';
 
-class PartyModal extends Component {
+class CreatePartyModal extends Component {
     state = {
         modal: false,
-        party: ''
+        raidType: '',
+        clanChat: '',
+        users: []
     }
 
     toggle = () => {
@@ -16,7 +18,7 @@ class PartyModal extends Component {
     };
 
     onChange = (e) => {
-        this.setState({ [e.target.party]: e.target.value })
+        this.setState({ [e.target.name]: e.target.value })
     };
 
     onSubmit = (e) => {
@@ -24,7 +26,9 @@ class PartyModal extends Component {
 
         const newParty = {
             id: 2,
-            party: this.state.party
+            raidType: this.state.raidType,
+            clanChat: this.state.clanChat,
+            users: this.state.users
         }
 
         //  Add party via addParty action
@@ -41,7 +45,6 @@ class PartyModal extends Component {
                     color="dark"
                     style={{marginBottom: '2rem'}}
                     onClick={this.toggle}
-                
                 >Add Party</Button>
 
                 <Modal
@@ -52,17 +55,34 @@ class PartyModal extends Component {
                     <ModalBody>
                         <Form onSubmit={this.onSubmit}>
                             <FormGroup>
-                                <Label for="party">Party</Label>
+                                <Label for="raidType">Raid Type</Label>
                                 <Input 
                                 type="text"
-                                name="party"
-                                id="party"
+                                name="raidType"
+                                id="raidType"
                                 placeholder="Add party"
                                 onChange={this.onChange}
                                 />
+                                <Label for="clanChat">Clan Chat</Label>
+                                <Input
+                                type="text"
+                                name="clanChat"
+                                id="clanChat"
+                                placeholder="Clan Chat"
+                                onChange={this.onChange}
+                                />
+                                <Label for="users">Users</Label>
+                                <Input
+                                type="text"
+                                id="users"
+                                placeholder="Your RSN"
+                                disabled />
+                                {/* The users field should just be the user logged in at this point since this is a new party.
+                                I think we need to fetch this from the backend with the authenticated jwt to retrieve the usersname. The field
+                                should remain disabled. */}
                                 <Button color="dark" type="submit"
                                 style={{marginTop: '2rem'}} block
-                                >Add Party</Button>
+                                >Create Party</Button>
                             </FormGroup>
                         </Form>
                     </ModalBody>
@@ -77,4 +97,4 @@ const mapStateToProps = state => ({
     party: state.party
 })
 
-export default connect(mapStateToProps, { addParty })(PartyModal);
+export default connect(mapStateToProps, { addParty })(CreatePartyModal);
