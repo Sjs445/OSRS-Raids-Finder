@@ -11,14 +11,11 @@ import {
     REGISTER_FAIL,
     REGISTER_SUCCESS
 } from './types';
-import { get } from 'mongoose';
 
 //  Check token and load user
 export const loadUser = () => (dispatch, getState) => {
     //  User loading
     dispatch({ type: USER_LOADING });
-
-   
 
     //  Fetch the user
     axios.get('/api/users/data', tokenConfig(getState))
@@ -35,7 +32,7 @@ export const loadUser = () => (dispatch, getState) => {
 };
 
 //  Register User
-export const register = ({ name, email, password, rsn }) => dispatch => {
+export const register = ({ name, email, password, password2, rsn }) => dispatch => {
     //  Headers
     const config = {
         headers: {
@@ -44,7 +41,7 @@ export const register = ({ name, email, password, rsn }) => dispatch => {
     }
 
     //  Request Body
-    const body = JSON.stringify({ name, email, password, rsn });
+    const body = JSON.stringify({ name, email, password, password2, rsn });
 
     axios.post('/api/users/register', body, config)
         .then(res => dispatch({
@@ -52,7 +49,7 @@ export const register = ({ name, email, password, rsn }) => dispatch => {
             payload: res.data
         }))
         .catch(err => { 
-            dispatch(returnErrors(err.response.data, err.response.status), 'REGISTER_FAIL')
+            dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'))
             dispatch({
             type: REGISTER_FAIL
         });

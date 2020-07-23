@@ -5,9 +5,12 @@ import { Container, Row, Col, Button, Form, FormGroup, FormText, Label, Input, F
 import PropTypes from 'prop-types';
 import { register } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';
+import classnames from 'classnames';
 
 class Register extends Component {
-        state = {
+    constructor() {
+        super();
+        this.state = {
             name: "",
             email: "",
             password: "",
@@ -19,11 +22,8 @@ class Register extends Component {
             }
         };
 
-        static propTypes = {
-            isAuthenticated: PropTypes.bool,
-            error: PropTypes.object.isRequired,
-            clearErrors: PropTypes.func.isRequired
-        }
+    }
+
 
     componentDidUpdate(prevProps) {
 
@@ -34,12 +34,12 @@ class Register extends Component {
             if(error.id === 'REGISTER_FAIL') {
                 this.setState({
                     errors: error.msg
-                })
-            }
+                });
+           }
             else {
                 this.setState({
-                    errors: null
-                })
+                    errors: {}
+                });
             }
         }
     }
@@ -85,7 +85,11 @@ class Register extends Component {
                         <Col>
                         <FormGroup>
                             <Label for="name"><i className="fa fa-user" aria-hidden="true"></i>&nbsp;Name</Label>
-                            <Input type="text" name="name" id="name" placeholder="Bob" onChange={this.onChange} value={this.state.name} />
+                            <Input type="text" name="name" id="name" placeholder="Bob" onChange={this.onChange} value={this.state.name} error={errors.name}
+                             className={classnames("", {
+                                 invalid: errors.name
+                             })}/>
+                             <span style={{color: "red"}}>{errors.name}</span>
                         </FormGroup>
                         </Col>
                         <Col>
@@ -97,7 +101,11 @@ class Register extends Component {
                                 onChange={ (e) => {
                                             this.validateEmail(e)
                                             this.onChange(e)
-                                        } }/>
+                                        } }
+                                className={classnames("", {
+                                    invalid: errors.email
+                                })} />
+                                <span style={{color: "red"}}>{errors.email}</span>
                           <FormFeedback>Please enter a valid email address.</FormFeedback>
                             </FormGroup>
                         </Col>
@@ -106,14 +114,22 @@ class Register extends Component {
                                 <Label for="password"><i className="fa fa-lock"></i>&nbsp;Password</Label>
                                 <Input type="password" name="password" id="password" placeholder="********"
                                 onChange={this.onChange}
-                                value={ this.state.password}  />
+                                value={ this.state.password}
+                                className={classnames("", {
+                                    invalid: errors.password
+                                })}  />
+                                <span style={{color: "red"}}>{errors.password}</span>
                                 <FormText>Password needs to be at least six characters.</FormText>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="password2"><i className="fa fa-lock"></i>&nbsp;Confirm Password</Label>
                                 <Input type="password" name="password2" id="password2" placeholder="********"
                                 onChange={this.onChange}
-                                value={ this.state.password2 } />
+                                value={ this.state.password2 }
+                                className={classnames("", {
+                                    invalid: errors.password2
+                                })} />
+                                <span style={{color: "red"}}>{errors.password2}</span>
                             </FormGroup>
                         </Col>
                         <Col>
@@ -121,7 +137,11 @@ class Register extends Component {
                                 <Label for="rsn"><i className="fa fa-tag" aria-hidden="true"></i>&nbsp;RSN</Label>
                                 <Input type="text" name="rsn" id="rsn" placeholder="Zezima"
                                 onChange={this.onChange}
-                                value={this.state.rsn} />
+                                value={this.state.rsn}
+                                className={classnames("", {
+                                    invalid: errors.rsn
+                                })} />
+                                <span style={{color: "red"}}>{errors.rsn}</span>
                                 <FormText>Other users will see you based on RSN.</FormText>
                             </FormGroup>
                         </Col>
@@ -137,6 +157,12 @@ class Register extends Component {
         )
     };
 };
+        
+Register.propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    clearErrors: PropTypes.func.isRequired
+}
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated,
