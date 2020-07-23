@@ -121,7 +121,7 @@ router.post("/login", (req, res) =>{
     });
 });
 
-//  @route  GET api/user/data
+//  @route  GET api/users/data
 //  @desc   Get user data
 //  @access Private
 router.get("/data", auth, (req, res) => {

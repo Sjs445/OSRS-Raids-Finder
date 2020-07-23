@@ -3,7 +3,6 @@
 //  Required Modules
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const xssFilters = require("xss-filters");
 const users = require("./routes/api/users");
 const party = require("./routes/api/party");
@@ -13,8 +12,7 @@ const csp = require("helmet-csp");
 const app = express();
 
 //  Body Parser Middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
 //  Declaring csp headers
 app.use(csp({
 	directives:{

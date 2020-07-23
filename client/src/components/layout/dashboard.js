@@ -30,8 +30,8 @@ componentDidMount() {
                 <CreatePartyModal />              
                 <ListGroup>
                     <TransitionGroup className="party-list">
-                    {parties.map(({id, raidType, clanChat, users})=> (
-                        <CSSTransition key={id} timeout={500} className="">
+                    {parties.map(({_id, raidType, clanChat, users})=> (
+                        <CSSTransition key={_id} timeout={500} className="">
                             <ListGroupItem>
                                 {/* We should only be able to delete the party if the user logged in, is the owner of the party. I.E. whoever
                                 created the party. We should be able to use the first user in the users arr since they are the creator. */}
@@ -40,7 +40,7 @@ componentDidMount() {
                                     className="remove-btn"
                                     color="danger"
                                     size="sm"
-                                    onClick={this.onDeleteClick.bind(this, id)}
+                                    onClick={this.onDeleteClick.bind(this, _id)}
                                     >&times;</Button>
                                 <b>Raid Type:</b> {raidType} <b>Clan Chat:</b> { clanChat } <b>Users:</b> {users}
                             </ListGroupItem>

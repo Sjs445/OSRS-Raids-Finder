@@ -5,6 +5,6 @@ import partyReducer from './partyReducer';
 
 export default combineReducers({
     auth: authReducer,
-    errors: errorReducer,
+    error: errorReducer,
     party: partyReducer
 });

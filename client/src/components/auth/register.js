@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Button, Form, FormGroup, FormText, Label, Input, FormFeedback } from 'reactstrap';
+import { connect } from 'react-redux';
+import { Container, Row, Col, Button, Form, FormGroup, FormText, Label, Input, FormFeedback, Alert } from 'reactstrap';
+import PropTypes from 'prop-types';
+import { register } from '../../actions/authActions';
+import { clearErrors } from '../../actions/errorActions';
 
 class Register extends Component {
-    constructor() {
-        super();
-        this.state = {
+        state = {
             name: "",
             email: "",
             password: "",
@@ -16,6 +18,30 @@ class Register extends Component {
                 emailState: "",
             }
         };
+
+        static propTypes = {
+            isAuthenticated: PropTypes.bool,
+            error: PropTypes.object.isRequired,
+            clearErrors: PropTypes.func.isRequired
+        }
+
+    componentDidUpdate(prevProps) {
+
+        const { error } = this.props;
+
+        if(error !== prevProps.error) {
+            //  Check for register error
+            if(error.id === 'REGISTER_FAIL') {
+                this.setState({
+                    errors: error.msg
+                })
+            }
+            else {
+                this.setState({
+                    errors: null
+                })
+            }
+        }
     }
 
     onChange = e => {
@@ -33,25 +59,8 @@ class Register extends Component {
             rsn: this.state.rsn
         }
 
-        try{
-            let response = await fetch('/api/users/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify(newUser)
-            });
-
-            let result = await response.json();
-            if(result) {
-                alert("Thanks for registering "+result.user.name);
-                this.props.history.push("/");
-            }
-        }
-        catch(err) {
-            console.log(err);
-        }
-
+        //  Attempt to register
+        this.props.register(newUser);
     };
 
     validateEmail = e => {
@@ -76,7 +85,7 @@ class Register extends Component {
                         <Col>
                         <FormGroup>
                             <Label for="name"><i className="fa fa-user" aria-hidden="true"></i>&nbsp;Name</Label>
-                            <Input type="text" name="name" id="name" placeholder="Bob" onChange={this.onChange} value={this.state.name} error={errors.email}/>
+                            <Input type="text" name="name" id="name" placeholder="Bob" onChange={this.onChange} value={this.state.name} />
                         </FormGroup>
                         </Col>
                         <Col>
@@ -84,7 +93,6 @@ class Register extends Component {
                                 <Label for="email"><i className="fa fa-envelope" aria-hidden="true"></i>&nbsp;Email</Label>
                                 <Input type="email" name="email" id="email" placeholder="email@example.com"
                                 value={this.state.email}
-                                error={errors.email}
                                 invalid={ this.state.validate.emailState === 'has-danger' }
                                 onChange={ (e) => {
                                             this.validateEmail(e)
@@ -98,16 +106,14 @@ class Register extends Component {
                                 <Label for="password"><i className="fa fa-lock"></i>&nbsp;Password</Label>
                                 <Input type="password" name="password" id="password" placeholder="********"
                                 onChange={this.onChange}
-                                value={ this.state.password} 
-                                error={errors.password} />
+                                value={ this.state.password}  />
                                 <FormText>Password needs to be at least six characters.</FormText>
                             </FormGroup>
                             <FormGroup>
                                 <Label for="password2"><i className="fa fa-lock"></i>&nbsp;Confirm Password</Label>
                                 <Input type="password" name="password2" id="password2" placeholder="********"
                                 onChange={this.onChange}
-                                value={ this.state.password2 }
-                                error={errors.password2} />
+                                value={ this.state.password2 } />
                             </FormGroup>
                         </Col>
                         <Col>
@@ -115,8 +121,7 @@ class Register extends Component {
                                 <Label for="rsn"><i className="fa fa-tag" aria-hidden="true"></i>&nbsp;RSN</Label>
                                 <Input type="text" name="rsn" id="rsn" placeholder="Zezima"
                                 onChange={this.onChange}
-                                value={this.state.rsn}
-                                error={errors.rsn} />
+                                value={this.state.rsn} />
                                 <FormText>Other users will see you based on RSN.</FormText>
                             </FormGroup>
                         </Col>
@@ -133,4 +138,12 @@ class Register extends Component {
     };
 };
 
-export default Register;
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    error: state.error
+});
+
+export default connect(
+    mapStateToProps,
+    { register, clearErrors }
+)(Register);

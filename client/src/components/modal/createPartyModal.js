@@ -25,7 +25,6 @@ class CreatePartyModal extends Component {
         e.preventDefault();
 
         const newParty = {
-            id: 2,
             raidType: this.state.raidType,
             clanChat: this.state.clanChat,
             users: this.state.users

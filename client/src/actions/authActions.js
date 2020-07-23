@@ -1,67 +1,81 @@
-import axios from "axios";
-import setAuthToken from "../utils/setAuthToken";
-import jwt_decode from "jwt-decode";
+import axios from 'axios';
+import { returnErrors } from './errorActions';
 
 import {
-    GET_ERRORS,
+    USER_LOADED,
     USER_LOADING,
-    SET_CURRENT_USER
-} from "./types";
+    AUTH_ERROR,
+    LOGIN_SUCCESS,
+    LOGIN_FAIL,
+    LOGOUT_SUCCESS,
+    REGISTER_FAIL,
+    REGISTER_SUCCESS
+} from './types';
+import { get } from 'mongoose';
+
+//  Check token and load user
+export const loadUser = () => (dispatch, getState) => {
+    //  User loading
+    dispatch({ type: USER_LOADING });
+
+   
+
+    //  Fetch the user
+    axios.get('/api/users/data', tokenConfig(getState))
+        .then(res => dispatch({
+            type: USER_LOADED,
+            payload: res.data
+        }))
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status))
+            dispatch({
+                type: AUTH_ERROR
+            });
+        });
+};
 
 //  Register User
-export const registerUser = (userData, history) => dispatch => {
-    axios
-        .post("/api/users/register", userData)
-        .then(res => history.push("/login"))    // redirect to login page
-        .catch(err => dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-        }));
-};
-
-//  Login and get user token
-export const loginUser = (userData) => dispatch => {
-    axios
-        .post("/api/users/login", userData)
-        .then(res => {
-            // Set token to local storage
-            const { token } = res.data;
-            localStorage.setItem("jwtToken", token);
-            //  Set token to authorization header
-            setAuthToken(token);
-            //  Decode token for user data
-            const decoded = jwt_decode(token);
-            //  Set current user
-            dispatch(setCurrentUser(decoded));
-        })
-        .catch(err =>
-            dispatch({
-                type: GET_ERRORS,
-                payload: err.response.data
-            }));
-};
-
-//  Set logged in user
-export const setCurrentUser = decoded => {
-    return {
-        type: SET_CURRENT_USER,
-        payload: decoded
+export const register = ({ name, email, password, rsn }) => dispatch => {
+    //  Headers
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
     }
-};
 
-//  User loading
-export const setUserLoading = () => {
-    return {
-        type: USER_LOADING
-    };
-};
+    //  Request Body
+    const body = JSON.stringify({ name, email, password, rsn });
 
-//  Logout
-export const logout = () => dispatch => {
-    //  Remove token from local storage
-    localStorage.removeItem("jwtToken");
-    //  Remove auth token
-    setAuthToken(false);
-    //  Set current uer to empty object {} which will set isAuthenticated to false
-    dispatch(setCurrentUser({}));
+    axios.post('/api/users/register', body, config)
+        .then(res => dispatch({
+            type: REGISTER_SUCCESS,
+            payload: res.data
+        }))
+        .catch(err => { 
+            dispatch(returnErrors(err.response.data, err.response.status), 'REGISTER_FAIL')
+            dispatch({
+            type: REGISTER_FAIL
+        });
+    });
+}
+
+
+//  Setup config/headers and token
+export const tokenConfig = getState => {
+     //  Get token from localStorage
+     const token = getState().auth.token;
+
+     //  Headers
+     const config = {
+         headers: {
+             "Content-type": "application/json"
+         }
+     }
+ 
+     //  If token, add to headers
+     if(token) {
+         config.headers['x-auth-token'] = token;
+     }
+
+     return config;
 };
