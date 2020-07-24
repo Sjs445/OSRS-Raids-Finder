@@ -2,8 +2,7 @@ import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, PARTIES_LOADING} from '../actions
 
 const initialState = {
     parties: [],
-    loading: false,
-    
+    loading: false
 };
 
 export default function(state = initialState, action) {
@@ -28,7 +27,7 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 loading: true
-            }
+            };
         default:
             return state;
     }

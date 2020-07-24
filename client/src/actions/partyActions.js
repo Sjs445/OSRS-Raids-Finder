@@ -1,16 +1,19 @@
 import axios from 'axios';
+import { tokenConfig } from './authActions';
+import { returnErrors } from './errorActions';
 import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, PARTIES_LOADING} from './types';
 
-export const getParties = () => dispatch => {
+export const getParties = () => (dispatch, getState) => {
     dispatch(setPartiesLoading());
     axios
-        .get('/api/party/all')
+        .get('/api/party/all', tokenConfig(getState))
         .then(res => 
             dispatch({
                 type: GET_PARTIES,
-                payload: res.data
+                payload: res.data.party
             })
             )
+        .catch( err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
 export const addParty = (party) => dispatch => {
