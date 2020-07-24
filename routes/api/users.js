@@ -84,13 +84,13 @@ router.post("/login", (req, res) =>{
 
     //  If user input is not valid throw error
     if(!isValid) {
-        return res.status(400).json({ errors })
+        return res.status(400).json(errors);
     }
     
     //  Look for user by email and the compare the password.
     User.findOne({email: email}).then( user => {
         if(!user) {
-            return res.status(400).json( { user: "Does not exist!" });
+            return res.status(400).json( { email: "Username and password failed to login. Please try again" });
         }
         else {
             bcrypt.compare(password, user.password, (error, result) => {

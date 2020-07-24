@@ -22,34 +22,34 @@ module.exports = function validRegister(data) {
 
     //  Check for empty name
     if(validator.isEmpty(name)) {
-        errors.name = "Name is required";
+        errors.name = "Name is required.";
     }
 
     //  Check for empty email and valid email address
     if(validator.isEmpty(email)) {
-        errors.email = "Email is required";
+        errors.email = "Email is required.";
     }
     else if(!validator.isEmail(email)) {
-        errors.email = "Invalid Email";
+        errors.email = "Invalid Email.";
     }
 
     //  Check for RSN
     if(validator.isEmpty(rsn)) {
-        errors.rsn = "RSN required";
+        errors.rsn = "RSN required.";
     }
 
     //  Check for empty passwords, length, matching...
     if(validator.isEmpty(password)) {
-        errors.password = "Password is required";
+        errors.password = "Password is required.";
     }
     if(validator.isEmpty(password2)) {
-        errors.password2 = "Confirm password is required";
+        errors.password2 = "Confirm password is required.";
     }
     if(!validator.isLength(password, {min: 6, max: 30})) {
-        errors.password = "Password length must be at least 6 characters";
+        errors.password = "Password length must be at least 6 characters.";
     }
     if(!validator.equals(password, password2)) {
-        errors.password2 = "Passwords do not match";
+        errors.password2 = "Passwords do not match.";
     }
     return {
         errors,

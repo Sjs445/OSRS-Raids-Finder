@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { getParties, deleteParty } from '../../actions/partyActions';
 import PropTypes from 'prop-types';
 import { Container, Button, ListGroup, ListGroupItem } from 'reactstrap';
@@ -22,6 +23,11 @@ componentDidMount() {
     this.props.getParties();
 }
     render() {
+        if(!this.props.isAuthenticated)
+        {
+            return <Redirect to="/" />
+        }
+        
         const { parties } = this.props.party;
         return (<div>
             <NavBar />
@@ -56,11 +62,13 @@ componentDidMount() {
 
 dashboard.propTypes = {
     getParties: PropTypes.func.isRequired,
-    party: PropTypes.object.isRequired
+    party: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool
 }
 
 const mapStateToProps = (state) => ({
-    party: state.party
+    party: state.party,
+    isAuthenticated: state.auth.isAuthenticated
 })
 
 export default connect(mapStateToProps, { getParties, deleteParty })(dashboard);

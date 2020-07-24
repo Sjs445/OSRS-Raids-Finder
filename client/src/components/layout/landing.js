@@ -1,12 +1,21 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Container, Row, Col, Button } from 'reactstrap';
 import cinematic from '../../assets/Raids_Cinematic_noblur.mp4';
 import styles from "../../styles/landing.module.css";
 
+//  Redux Components
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 
 class Landing extends Component {
+
     render(){
+        if(this.props.isAuthenticated) {
+            return <Redirect to='/dashboard' />
+        }
+
         return(
             <div>
                 <section className={styles.showcase}>
@@ -52,4 +61,12 @@ class Landing extends Component {
     };
 };
 
-export default Landing;
+Landing.propTypes = {
+    isAuthenticated: PropTypes.bool
+}
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps)(Landing);

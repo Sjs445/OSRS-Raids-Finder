@@ -17,15 +17,15 @@ module.exports = function validateLogin(data) {
 
     //  Check if empty email or incorrect email format
     if(validator.isEmpty(email)) {
-        errors.email = "Email is required";
+        errors.email = "Email is required.";
     }
     else if(!validator.isEmail(email)) {
-        errors.email = "Invalid email";
+        errors.email = "Invalid email.";
     }
 
     //  Password check if empty field
     if(validator.isEmpty(password)) {
-        errors.password = "Password is required";
+        errors.password = "Password is required.";
     }
 
     //  Return our errors and isValid object

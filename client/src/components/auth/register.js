@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 import { Container, Row, Col, Button, Form, FormGroup, FormText, Label, Input, FormFeedback, Alert } from 'reactstrap';
 import PropTypes from 'prop-types';
@@ -22,6 +22,12 @@ class Register extends Component {
             }
         };
 
+    }
+
+    componentDidMount() {
+        if(this.props.isAuthenticated) {
+            this.props.history.push("/dashboard");
+        }
     }
 
 
@@ -75,6 +81,11 @@ class Register extends Component {
     };
 
     render() {
+
+        if(this.props.isAuthenticated) {
+            return <Redirect to="/dashboard" />
+        }
+        
         const { errors } = this.state;
         return(
             <div>

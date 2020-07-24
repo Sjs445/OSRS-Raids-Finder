@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { login } from '../../actions/authActions';
+import { clearErrors } from '../../actions/errorActions';
 import { Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
+import classnames from 'classnames';
 
 class Login extends Component {
     constructor() {
@@ -14,7 +19,38 @@ class Login extends Component {
             }
         };
     }
+    
+    componentDidMount() {
+        if(this.props.isAuthenticated) {
+            this.props.history.push("/dashboard");
+        }
+    }
 
+    componentDidUpdate(prevProps) {
+
+        const { error } = this.props;
+
+        if(error !== prevProps.error) {
+            //  Check for login error
+            if(error.id === 'LOGIN_FAIL') {
+                this.setState({
+                    errors: error.msg
+                });
+                return;
+            }
+            else {
+                this.setState({
+                    errors: {}
+                });
+                return;
+            }
+        }
+
+        if(this.props.isAuthenticated) {
+            this.props.history.push("/dashboard");
+        }
+        
+    }
 
     onChange = e => {
         this.setState({ [e.target.id]: e.target.value });
@@ -28,28 +64,8 @@ class Login extends Component {
             password: this.state.password
         };
 
-        try{
-            let response = await fetch('/api/users/login', {
-                method: 'POST',
-                headers:{
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify(userData)
-            });
-            let result = await response.json();
-
-            if(result) {
-                sessionStorage.setItem('token', result.token);
-            }
-        
-            if(sessionStorage.getItem("token")) {
-                // console.log("User has token "+sessionStorage.token);
-                this.props.history.push('/dashboard');
-            }
-        }
-        catch(err){
-            console.log(err);
-        }
+        //  Attempt to login
+        this.props.login(userData);
     }
 
     validateEmail = e => {
@@ -84,7 +100,11 @@ class Login extends Component {
                                     this.validateEmail(e)
                                     this.onChange(e)
                                 }}
+                                className={classnames("", {
+                                    invalid: errors.email
+                                })}
                                 />
+                                <span style={{color: "red"}}>{errors.email}</span>
                                 <FormFeedback>Please enter a valid email address.</FormFeedback>
                             </FormGroup>
                             </Col>
@@ -94,7 +114,12 @@ class Login extends Component {
                                 <Input type="password" name="password" id="password" placeholder="********"
                                 value={this.state.password}
                                 error={errors.password}
-                                onChange={this.onChange} />
+                                onChange={this.onChange}
+                                className={classnames("", {
+                                    invalid: errors.password
+                                })}
+                                />
+                                <span style={{color: "red"}}>{errors.password}</span>
                             </FormGroup>
                             <FormGroup>
                                 <Button type="submit" value="Submit">Submit</Button>
@@ -108,4 +133,18 @@ class Login extends Component {
     };
 };
 
-export default Login;
+Login.propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    clearErrors: PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    error: state.error
+})
+
+export default connect(
+    mapStateToProps,
+    { login, clearErrors }
+)(Login);

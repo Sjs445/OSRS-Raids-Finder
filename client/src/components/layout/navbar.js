@@ -14,6 +14,7 @@ import {
     DropdownItem,
     NavbarText
   } from 'reactstrap';
+import Logout from '../auth/logout';
 
 const NavBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +38,7 @@ const NavBar = (props) => {
                             <NavLink href="/contact">Contact Us</NavLink>
                         </NavItem>
                         <NavItem>
-                            <NavLink href="/logout">Logout</NavLink>
+                            <Logout />
                         </NavItem>
                     </Nav>
                     </Collapse>
