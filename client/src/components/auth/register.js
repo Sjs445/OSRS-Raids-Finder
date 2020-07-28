@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
-import { Container, Row, Col, Button, Form, FormGroup, FormText, Label, Input, FormFeedback, Alert } from 'reactstrap';
+import { Container, Row, Col, Button, Form, FormGroup, FormText, Label, Input, FormFeedback, Alert, Spinner } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { register } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';
@@ -48,6 +48,7 @@ class Register extends Component {
                 });
             }
         }
+
     }
 
     onChange = e => {
@@ -84,6 +85,33 @@ class Register extends Component {
 
         if(this.props.isAuthenticated) {
             return <Redirect to="/dashboard" />
+        }
+
+        if(this.props.isLoading) {
+            return (
+                <div>
+                    <Container>
+                        <Col>
+                        <div style={{margin: '0 auto'}}>
+                        <Spinner style={{ width: '3rem', height: '3rem' }} />{' '}
+                        </div>
+                        </Col>
+                    </Container>
+                </div>
+            )
+        }
+
+        if(this.props.user) {
+            return(
+                <div>
+                    <Container>
+                        <Col>
+                        <h1>Thanks for registering {this.props.user.name}</h1>
+                        <a href="/login">Login</a>
+                        </Col>
+                    </Container>      
+                </div>
+            )
         }
         
         const { errors } = this.state;
@@ -172,12 +200,16 @@ class Register extends Component {
 Register.propTypes = {
     isAuthenticated: PropTypes.bool,
     error: PropTypes.object.isRequired,
-    clearErrors: PropTypes.func.isRequired
+    clearErrors: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    isLoading: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated,
-    error: state.error
+    error: state.error,
+    user: state.auth.user,
+    isLoading: state.auth.isLoading
 });
 
 export default connect(

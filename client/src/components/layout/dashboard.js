@@ -31,12 +31,12 @@ componentDidMount() {
         const { parties } = this.props.party;
         return (<div>
             <NavBar />
-            <h1 style={{textAlign: "center", margin: "1rem"}}>Welcome to the dashboard</h1>
+        <h1 style={{textAlign: "center", margin: "1rem"}}>Welcome to the dashboard {this.props.user.name}</h1>
             <Container>
                 <CreatePartyModal />              
                 <ListGroup>
                     <TransitionGroup className="party-list">
-                    {parties.map(({_id, raidType, clanChat, users})=> (
+                    {parties.map(({_id, raidType, clanChat, users, partyLeader})=> (
                         <CSSTransition key={_id} timeout={500} className="">
                             <ListGroupItem>
                                 {/* We should only be able to delete the party if the user logged in, is the owner of the party. I.E. whoever
@@ -48,7 +48,7 @@ componentDidMount() {
                                     size="sm"
                                     onClick={this.onDeleteClick.bind(this, _id)}
                                     >&times;</Button>
-                                <b>Raid Type:</b> {raidType} <b>Clan Chat:</b> { clanChat } <b>Users:</b> {users}
+                                <b>Raid Type:</b> {raidType} <b>Clan Chat:</b> { clanChat } <b>Users:</b> {users} <b>Party Leader:</b> {partyLeader}
                             </ListGroupItem>
                         </CSSTransition>
                     ))}
@@ -63,12 +63,14 @@ componentDidMount() {
 dashboard.propTypes = {
     getParties: PropTypes.func.isRequired,
     party: PropTypes.object.isRequired,
-    isAuthenticated: PropTypes.bool
+    isAuthenticated: PropTypes.bool,
+    user: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
     party: state.party,
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user
 })
 
 export default connect(mapStateToProps, { getParties, deleteParty })(dashboard);

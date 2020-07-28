@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';
-import { Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
+import { Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText, FormFeedback, Spinner } from 'reactstrap';
 import classnames from 'classnames';
 
 class Login extends Component {
@@ -82,6 +82,20 @@ class Login extends Component {
     render(){
         const { errors } = this.state;
 
+        if(this.props.isLoading) {
+            return (
+                <div>
+                    <Container>
+                        <Col>
+                        <div style={{margin: '0 auto'}}>
+                        <Spinner style={{ width: '3rem', height: '3rem' }} />{' '}
+                        </div>
+                        </Col>
+                    </Container>
+                </div>
+            )
+        }
+
         return(
             <div>
                 <Container>
@@ -136,12 +150,14 @@ class Login extends Component {
 Login.propTypes = {
     isAuthenticated: PropTypes.bool,
     error: PropTypes.object.isRequired,
-    clearErrors: PropTypes.func.isRequired
+    clearErrors: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated,
-    error: state.error
+    error: state.error,
+    isLoading: state.auth.isLoading
 })
 
 export default connect(

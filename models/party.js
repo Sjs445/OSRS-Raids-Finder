@@ -10,6 +10,10 @@ const partySchema = new Schema({
         type: String,
         required: true
     },
+    partyLeader: {
+        type: String,
+        required: true
+    },
     users: {
         type: Array,
         required: true

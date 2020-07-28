@@ -11,10 +11,12 @@ module.exports = function validateParty(data) {
     // Convert empty fields to an empty string so we can use validator functions
     data.raidType = !isEmpty(data.raidType) ? data.raidType : "";
     data.clanChat = !isEmpty(data.clanChat) ? data.clanChat : "";
+    data.partyLeader = !isEmpty(data.partyLeader) ? data.partyLeader : "";
     
     //  Filter for xss attacks
     let raidType = xssFilters.inHTMLData(data.raidType);
     let clanChat = xssFilters.inHTMLData(data.clanChat);
+    let partyLeader = xssFilters.inHTMLData(data.partyLeader);
 
     //  Validate if there is empty data being submit
     if(validator.isEmpty(raidType)) {
@@ -25,14 +27,11 @@ module.exports = function validateParty(data) {
         errors.clanChat = "Please enter a clan chat.";
     }
 
-    if(data.users.length === 0) {
-        errors.users = "Error, no users in party.";
+    if(validator.isEmpty(partyLeader)) {
+        errors.partyLeader = "Error, no party leader found.";
     }
     else {
-        
-        for(let i=0; i<data.users.length; i++) {
-            users[i] = xssFilters.inHTMLData(data.users[i]);
-        }
+        users.push(partyLeader);
     }
 
     return {
@@ -40,6 +39,7 @@ module.exports = function validateParty(data) {
         isValid: isEmpty(errors),
         raidType,
         clanChat,
-        users
+        users,
+        partyLeader
     }
 }

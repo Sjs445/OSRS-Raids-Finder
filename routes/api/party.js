@@ -31,19 +31,19 @@ router.get("/all", auth, (req, res) =>{
 //  @desc creates a new party
 //  @access Private
 router.post("/new", auth, (req, res) => {
-    const { errors, isValid, raidType, clanChat, users } = validateParty(req.body);
+    const { errors, isValid, raidType, clanChat, users, partyLeader } = validateParty(req.body);
 
     //  If user input is not valid throw error
     if(!isValid) {
         return res.status(400).json({errors});
     }
 
-    let partyObj = new Party({ raidType, clanChat, users });
+    let partyObj = new Party({ raidType, clanChat, users, partyLeader });
 
     partyObj.save().then(data => {
         res.json(data);
     })
-    .catch(er => console.log(err));
+    .catch(err => console.log(err));
 });
 
 //  @route  DELETE api/party/:id

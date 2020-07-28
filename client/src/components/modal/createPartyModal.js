@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import { addParty } from '../../actions/partyActions';
+import PropTypes from 'prop-types';
 
 class CreatePartyModal extends Component {
     state = {
         modal: false,
         raidType: '',
         clanChat: '',
-        users: []
+        partyLeader: ''
     }
 
     toggle = () => {
@@ -27,7 +28,7 @@ class CreatePartyModal extends Component {
         const newParty = {
             raidType: this.state.raidType,
             clanChat: this.state.clanChat,
-            users: this.state.users
+            partyLeader: this.props.user.rsn
         }
 
         //  Add party via addParty action
@@ -59,7 +60,7 @@ class CreatePartyModal extends Component {
                                 type="text"
                                 name="raidType"
                                 id="raidType"
-                                placeholder="Add party"
+                                placeholder="Chambers of Xeric"
                                 onChange={this.onChange}
                                 />
                                 <Label for="clanChat">Clan Chat</Label>
@@ -67,14 +68,15 @@ class CreatePartyModal extends Component {
                                 type="text"
                                 name="clanChat"
                                 id="clanChat"
-                                placeholder="Clan Chat"
+                                placeholder={this.props.user.rsn}
                                 onChange={this.onChange}
                                 />
-                                <Label for="users">Users</Label>
+                                <Label for="partyLeader">Party Leader</Label>
                                 <Input
                                 type="text"
-                                id="users"
-                                placeholder="Your RSN"
+                                id="partyLeader"
+                                placeholder={this.props.user.rsn}
+                                value={this.props.user.rsn}
                                 disabled />
                                 {/* The users field should just be the user logged in at this point since this is a new party.
                                 I think we need to fetch this from the backend with the authenticated jwt to retrieve the usersname. The field
@@ -85,15 +87,20 @@ class CreatePartyModal extends Component {
                             </FormGroup>
                         </Form>
                     </ModalBody>
-
                 </Modal>
             </div>
         );
     }
 }
 
+CreatePartyModal.propTypes = {
+    party: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired
+};
+
 const mapStateToProps = state => ({
-    party: state.party
-})
+    party: state.party,
+    user: state.auth.user
+});
 
 export default connect(mapStateToProps, { addParty })(CreatePartyModal);
