@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { getParties, deleteParty } from '../../actions/partyActions';
+import { getParties, deleteParty, joinParty } from '../../actions/partyActions';
 import PropTypes from 'prop-types';
 import { Container, Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -17,6 +17,10 @@ constructor(props) {
 
 onDeleteClick = (id) => {
     this.props.deleteParty(id);
+}
+
+onJoinClick = (id) => {
+    this.props.joinParty(id, this.props.user.rsn);
 }
 
 componentDidMount() {
@@ -41,6 +45,8 @@ componentDidMount() {
                             <ListGroupItem>
                                 {/* We should only be able to delete the party if the user logged in, is the owner of the party. I.E. whoever
                                 created the party. We should be able to use the first user in the users arr since they are the creator. */}
+                                <Button color="primary"
+                                onClick={this.onJoinClick.bind(this, _id)}>Join Party</Button>
                                 <Button
                                     style={{margin: ".5rem"}}
                                     className="remove-btn"
@@ -64,7 +70,8 @@ dashboard.propTypes = {
     getParties: PropTypes.func.isRequired,
     party: PropTypes.object.isRequired,
     isAuthenticated: PropTypes.bool,
-    user: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired,
+    joinParty: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -73,4 +80,4 @@ const mapStateToProps = (state) => ({
     user: state.auth.user
 })
 
-export default connect(mapStateToProps, { getParties, deleteParty })(dashboard);
+export default connect(mapStateToProps, { getParties, deleteParty, joinParty })(dashboard);

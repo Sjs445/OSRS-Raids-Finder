@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
-import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, PARTIES_LOADING} from './types';
+import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, PARTIES_LOADING, UPDATE_PARTY} from './types';
 import { get } from 'mongoose';
 
 export const getParties = () => (dispatch, getState) => {
@@ -27,6 +27,20 @@ export const addParty = (party) => (dispatch, getState) => {
             })
             )
         .catch( err =>  dispatch(returnErrors(err.response.data, err.response.status)));
+}
+
+export const joinParty = (id, rsn) => (dispatch, getState) => {
+
+    const body = JSON.stringify({ rsn });
+
+    axios
+        .post(`/api/party/${id}`, body, tokenConfig(getState))
+        .then(res =>
+            dispatch({
+                type: UPDATE_PARTY
+            })
+            )
+        .catch( err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
 

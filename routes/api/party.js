@@ -46,6 +46,28 @@ router.post("/new", auth, (req, res) => {
     .catch(err => console.log(err));
 });
 
+//  @route  POST api/party/:id
+//  @desc   adds user to the party
+//  @access Private
+router.post("/:id", auth, (req, res) => {
+
+    if(!req.body.rsn) {
+        return res.json({error: "Invalid Body. Could not add user to party."});
+    }
+
+    Party.findByIdAndUpdate({_id: req.params.id}, {$push: {users: req.body.rsn}}, {new: true},
+        function(err, party) {
+            if(err) {
+                console.log(err);
+                return;
+            }
+
+            return res.json(party);
+        })
+
+
+});
+
 //  @route  DELETE api/party/:id
 //  @desc   deletes a party by id
 //  @access Private

@@ -1,4 +1,4 @@
-import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, PARTIES_LOADING} from '../actions/types';
+import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, UPDATE_PARTY, PARTIES_LOADING} from '../actions/types';
 
 const initialState = {
     parties: [],
@@ -17,6 +17,10 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 parties: state.parties.filter(party => party._id !== action.payload)
+            };
+        case UPDATE_PARTY:
+            return {
+                ...state
             };
         case ADD_PARTY:
             return {
