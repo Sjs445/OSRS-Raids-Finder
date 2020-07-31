@@ -37,7 +37,8 @@ export const joinParty = (id, rsn) => (dispatch, getState) => {
         .post(`/api/party/${id}`, body, tokenConfig(getState))
         .then(res =>
             dispatch({
-                type: UPDATE_PARTY
+                type: UPDATE_PARTY,
+                payload: res.data.party
             })
             )
         .catch( err => dispatch(returnErrors(err.response.data, err.response.status)));

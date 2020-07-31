@@ -62,7 +62,7 @@ router.post("/:id", auth, (req, res) => {
                 return;
             }
 
-            return res.json(party);
+            return res.json({party});
         })
 
 

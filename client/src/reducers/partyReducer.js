@@ -20,7 +20,11 @@ export default function(state = initialState, action) {
             };
         case UPDATE_PARTY:
             return {
-                ...state
+                ...state,
+                parties: state.parties.map(
+                    (party) => party._id === action.payload._id ? {...party, users: action.payload.users}
+                    : party
+                )
             };
         case ADD_PARTY:
             return {
