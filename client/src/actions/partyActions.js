@@ -29,9 +29,9 @@ export const addParty = (party) => (dispatch, getState) => {
         .catch( err =>  dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
-export const joinParty = (id, rsn) => (dispatch, getState) => {
+export const joinParty = (id, rsn, userid) => (dispatch, getState) => {
 
-    const body = JSON.stringify({ rsn });
+    const body = JSON.stringify({ rsn, userid });
 
     axios
         .post(`/api/party/${id}`, body, tokenConfig(getState))

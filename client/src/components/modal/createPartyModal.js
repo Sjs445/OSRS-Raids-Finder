@@ -28,7 +28,8 @@ class CreatePartyModal extends Component {
         const newParty = {
             raidType: this.state.raidType,
             clanChat: this.state.clanChat,
-            partyLeader: this.props.user.rsn
+            partyLeader: this.props.user.rsn,
+            userid: this.props.user._id
         }
 
         //  Add party via addParty action
@@ -78,9 +79,6 @@ class CreatePartyModal extends Component {
                                 placeholder={this.props.user.rsn}
                                 value={this.props.user.rsn}
                                 disabled />
-                                {/* The users field should just be the user logged in at this point since this is a new party.
-                                I think we need to fetch this from the backend with the authenticated jwt to retrieve the usersname. The field
-                                should remain disabled. */}
                                 <Button color="dark" type="submit"
                                 style={{marginTop: '2rem'}} block
                                 >Create Party</Button>

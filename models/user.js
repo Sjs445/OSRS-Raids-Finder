@@ -8,7 +8,8 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -16,10 +17,11 @@ const UserSchema = new Schema({
   },
   rsn:  {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   party: {
-      type: Number,
+      type: String,
       required: false
   },
   createDate: {

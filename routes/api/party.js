@@ -8,6 +8,7 @@ const keys = require("../../config/keys");
 
 //  Load schema
 const Party = require("../../models/party");
+const User = require("../../models/user");
 
 //  Validation function
 const validateParty = require("../../validation/createParty");
@@ -51,20 +52,24 @@ router.post("/new", auth, (req, res) => {
 //  @access Private
 router.post("/:id", auth, (req, res) => {
 
-    if(!req.body.rsn) {
+    if(!req.body.rsn || !req.body.userid) {
         return res.json({error: "Invalid Body. Could not add user to party."});
     }
 
-    Party.findByIdAndUpdate({_id: req.params.id}, {$push: {users: req.body.rsn}}, {new: true},
+    Party.findByIdAndUpdate({_id: req.params.id}, {$push: {users: {id: req.body.userid, rsn: req.body.rsn}}}, {new: true},
         function(err, party) {
             if(err) {
                 console.log(err);
                 return;
             }
-
-            return res.json({party});
+            User.findOne({_id: req.body.userid}).then(user => {
+                if(user) {
+                    user.updateOne({party: party._id}).then(() => res.json({party}))
+                    .catch(error => console.log(error));
+                    return;
+                }
+            })
         })
-
 
 });
 

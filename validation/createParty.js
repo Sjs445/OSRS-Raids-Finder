@@ -12,11 +12,13 @@ module.exports = function validateParty(data) {
     data.raidType = !isEmpty(data.raidType) ? data.raidType : "";
     data.clanChat = !isEmpty(data.clanChat) ? data.clanChat : "";
     data.partyLeader = !isEmpty(data.partyLeader) ? data.partyLeader : "";
+    data.userid = !isEmpty(data.userid) ? data.userid: "";
     
     //  Filter for xss attacks
     let raidType = xssFilters.inHTMLData(data.raidType);
     let clanChat = xssFilters.inHTMLData(data.clanChat);
     let partyLeader = xssFilters.inHTMLData(data.partyLeader);
+    let userid = xssFilters.inHTMLData(data.userid);
 
     //  Validate if there is empty data being submit
     if(validator.isEmpty(raidType)) {
@@ -31,7 +33,7 @@ module.exports = function validateParty(data) {
         errors.partyLeader = "Error, no party leader found.";
     }
     else {
-        users.push(partyLeader);
+        users.push({id: userid, rsn: partyLeader});
     }
 
     return {

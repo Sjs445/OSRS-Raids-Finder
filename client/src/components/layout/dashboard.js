@@ -20,7 +20,7 @@ onDeleteClick = (id) => {
 }
 
 onJoinClick = (id) => {
-    this.props.joinParty(id, this.props.user.rsn);
+    this.props.joinParty(id, this.props.user.rsn, this.props.user._id);
 }
 
 componentDidMount() {
@@ -43,9 +43,8 @@ componentDidMount() {
                     {parties.map(({_id, raidType, clanChat, users, partyLeader})=> (
                         <CSSTransition key={_id} timeout={500} className="">
                             <ListGroupItem>
-                                {/* We should only be able to delete the party if the user logged in, is the owner of the party. I.E. whoever
-                                created the party. We should be able to use the first user in the users arr since they are the creator. */}
                                 <Button color="primary"
+                                style={{margin: ".5rem"}}
                                 onClick={this.onJoinClick.bind(this, _id)}>Join Party</Button>
                                 <Button
                                     style={{margin: ".5rem"}}
@@ -54,7 +53,15 @@ componentDidMount() {
                                     size="sm"
                                     onClick={this.onDeleteClick.bind(this, _id)}
                                     >&times;</Button>
-                                <b>Raid Type:</b> {raidType} <b>Clan Chat:</b> { clanChat } <b>Users:</b> {users} <b>Party Leader:</b> {partyLeader}
+                                    <b>Raid Type:</b> {raidType} <b>Clan Chat:</b> { clanChat } <b>Party Leader:</b> {partyLeader}
+                                    <br /><b>Users:</b>
+                                {users.map(({id, rsn}, index) => (
+                                <CSSTransition key={id} timeout={500} className="">
+                                    <ListGroupItem>
+                                     <b>{index+1}.</b> {rsn}
+                                    </ListGroupItem>
+                                </CSSTransition>
+                            ))}
                             </ListGroupItem>
                         </CSSTransition>
                     ))}
