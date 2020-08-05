@@ -64,7 +64,7 @@ router.post("/:id", auth, (req, res) => {
         return res.json({error: "Invalid Body. Could not add user to party."});
     }
 
-    Party.findByIdAndUpdate({_id: req.params.id}, {$push: {users: {id: req.body.userid, rsn: req.body.rsn}}}, {new: true},
+    Party.findByIdAndUpdate({_id: req.params.id}, {$push: {users: {_id: req.body.userid, rsn: req.body.rsn}}}, {new: true},
         function(err, party) {
             if(err) {
                 console.log(err);
