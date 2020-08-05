@@ -41,8 +41,16 @@ router.post("/new", auth, (req, res) => {
 
     let partyObj = new Party({ raidType, clanChat, users, partyLeader });
 
+    //  Create party and assign party id to the user who created it
     partyObj.save().then(data => {
-        res.json(data);
+        User.findById(users[0]._id).then(user => {
+            if(user) {
+                user.updateOne({party: data._id}).then(() => {
+                    res.json(data);
+                })
+                .catch(error => console.log(error))
+            }
+        }).catch(error => console.log(error))
     })
     .catch(err => console.log(err));
 });

@@ -33,7 +33,7 @@ module.exports = function validateParty(data) {
         errors.partyLeader = "Error, no party leader found.";
     }
     else {
-        users.push({id: userid, rsn: partyLeader});
+        users.push({_id: userid, rsn: partyLeader});
     }
 
     return {
