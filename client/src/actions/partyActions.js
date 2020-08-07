@@ -2,7 +2,6 @@ import axios from 'axios';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
 import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, PARTIES_LOADING, UPDATE_PARTY} from './types';
-import { get } from 'mongoose';
 
 export const getParties = () => (dispatch, getState) => {
     dispatch(setPartiesLoading());
@@ -45,14 +44,28 @@ export const joinParty = (id, rsn, userid) => (dispatch, getState) => {
 }
 
 
-export const deleteParty = (id) => (dispatch, getState) => {
+export const deleteParty = (id, userid) => (dispatch, getState) => {
+
     axios
-        .delete(`/api/party/${id}`, tokenConfig(getState)).then(res =>
+        .delete(`/api/party/${id}/${userid}`, tokenConfig(getState)).then(res =>
                 dispatch({
                     type: DELETE_PARTY,
                     payload: id
                 })
-            )
+            ).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+}
+
+export const removeFromParty = (id, userid) => (dispatch, getState) => {
+
+    const body = JSON.stringify({userid});
+
+    axios
+        .post(`/api/party/remove/${id}`, body, tokenConfig(getState)).then(res =>
+            dispatch({
+                type: UPDATE_PARTY,
+                payload: res.data.party
+            }))
+            .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
 

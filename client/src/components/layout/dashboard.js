@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { getParties, deleteParty, joinParty } from '../../actions/partyActions';
+import { getParties, deleteParty, joinParty, removeFromParty } from '../../actions/partyActions';
 import PropTypes from 'prop-types';
 import { Container, Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import CreatePartyModal from "../modal/createPartyModal";
+import store from '../../store';
+import { loadUser } from '../../actions/authActions';
 
 import NavBar from './navbar';
 
@@ -16,11 +18,28 @@ constructor(props) {
 }
 
 onDeleteClick = (id) => {
-    this.props.deleteParty(id);
+    this.props.deleteParty(id, this.props.user._id);
 }
 
 onJoinClick = (id) => {
     this.props.joinParty(id, this.props.user.rsn, this.props.user._id);
+}
+
+onLeaveClick = (id, index) => {
+    //  If the party only has 1 user delete the party.
+    if(this.props.party.parties[index].users.length === 1) {
+        this.props.deleteParty(id, this.props.user._id);
+    }
+    else {
+        //  Remove the one user from the party
+        this.props.removeFromParty(id, this.props.user._id);
+    }
+}
+
+componentDidUpdate(prevProps) {
+    if(this.props.party.parties !== prevProps.party.parties) {
+        store.dispatch(loadUser());
+    }
 }
 
 componentDidMount() {
@@ -33,19 +52,30 @@ componentDidMount() {
         }
         
         const { parties } = this.props.party;
+        const { user } = this.props;
         return (<div>
             <NavBar />
         <h1 style={{textAlign: "center", margin: "1rem"}}>Welcome to the dashboard {this.props.user.name}</h1>
             <Container>
-                <CreatePartyModal />              
+                {!user.party &&
+                <CreatePartyModal />
+                }              
                 <ListGroup>
                     <TransitionGroup className="party-list">
-                    {parties.map(({_id, raidType, clanChat, users, partyLeader})=> (
+                    {parties.map(({_id, raidType, clanChat, users, partyLeader}, index)=> (
                         <CSSTransition key={_id} timeout={500} className="">
                             <ListGroupItem>
+                                {!user.party &&
                                 <Button color="primary"
                                 style={{margin: ".5rem"}}
                                 onClick={this.onJoinClick.bind(this, _id)}>Join Party</Button>
+                                }
+                                {user.party === _id &&
+                                    <Button color="danger"
+                                    style={{margin: ".5rem"}}
+                                    onClick={this.onLeaveClick.bind(this, _id, index)}>Leave Party</Button>
+                                }
+                                
                                 <Button
                                     style={{margin: ".5rem"}}
                                     className="remove-btn"
@@ -78,7 +108,8 @@ dashboard.propTypes = {
     party: PropTypes.object.isRequired,
     isAuthenticated: PropTypes.bool,
     user: PropTypes.object.isRequired,
-    joinParty: PropTypes.func.isRequired
+    joinParty: PropTypes.func.isRequired,
+    removeFromParty: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -87,4 +118,4 @@ const mapStateToProps = (state) => ({
     user: state.auth.user
 })
 
-export default connect(mapStateToProps, { getParties, deleteParty, joinParty })(dashboard);
+export default connect(mapStateToProps, { getParties, deleteParty, joinParty, removeFromParty })(dashboard);
