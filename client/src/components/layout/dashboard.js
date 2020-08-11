@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { Container, Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import CreatePartyModal from "../modal/createPartyModal";
+import RemovePartyModal from "../modal/removePartyModal";
 import store from '../../store';
 import { loadUser } from '../../actions/authActions';
 
@@ -13,12 +14,9 @@ import NavBar from './navbar';
 
 
 class dashboard extends React.Component {
-constructor(props) {
-    super(props);
-}
 
 onDeleteClick = (id) => {
-    this.props.deleteParty(id, this.props.user._id);
+    this.props.deleteParty(id);
 }
 
 onJoinClick = (id) => {
@@ -28,7 +26,7 @@ onJoinClick = (id) => {
 onLeaveClick = (id, index) => {
     //  If the party only has 1 user delete the party.
     if(this.props.party.parties[index].users.length === 1) {
-        this.props.deleteParty(id, this.props.user._id);
+        this.props.deleteParty(id);
     }
     else {
         //  Remove the one user from the party
@@ -75,14 +73,9 @@ componentDidMount() {
                                     style={{margin: ".5rem"}}
                                     onClick={this.onLeaveClick.bind(this, _id, index)}>Leave Party</Button>
                                 }
-                                
-                                <Button
-                                    style={{margin: ".5rem"}}
-                                    className="remove-btn"
-                                    color="danger"
-                                    size="sm"
-                                    onClick={this.onDeleteClick.bind(this, _id)}
-                                    >&times;</Button>
+                                {user.rsn === partyLeader &&
+                                <RemovePartyModal partyid={_id} />
+                                }
                                     <b>Raid Type:</b> {raidType} <b>Clan Chat:</b> { clanChat } <b>Party Leader:</b> {partyLeader}
                                     <br /><b>Users:</b>
                                 {users.map(({id, rsn}, index) => (
@@ -107,7 +100,7 @@ dashboard.propTypes = {
     getParties: PropTypes.func.isRequired,
     party: PropTypes.object.isRequired,
     isAuthenticated: PropTypes.bool,
-    user: PropTypes.object.isRequired,
+    user: PropTypes.object,
     joinParty: PropTypes.func.isRequired,
     removeFromParty: PropTypes.func.isRequired
 }

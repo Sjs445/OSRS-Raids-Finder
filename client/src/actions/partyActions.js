@@ -44,10 +44,10 @@ export const joinParty = (id, rsn, userid) => (dispatch, getState) => {
 }
 
 
-export const deleteParty = (id, userid) => (dispatch, getState) => {
+export const deleteParty = (id) => (dispatch, getState) => {
 
     axios
-        .delete(`/api/party/${id}/${userid}`, tokenConfig(getState)).then(res =>
+        .delete(`/api/party/${id}`, tokenConfig(getState)).then(res =>
                 dispatch({
                     type: DELETE_PARTY,
                     payload: id

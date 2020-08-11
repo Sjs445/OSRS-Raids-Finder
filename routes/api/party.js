@@ -82,25 +82,26 @@ router.post("/:id", auth, (req, res) => {
 });
 
 //  @route  DELETE api/party/:id/:userid
-//  @desc   deletes a party by id and removes party field from the user.
+//  @desc   deletes a party by id and removes party from all users.
 //  @access Private
-
-//  Problem with this one is if other users are inside the party their 'party' value will not be null.
-router.delete("/:id/:userid", auth, (req, res) =>{
+router.delete("/:id", auth, (req, res) =>{
     Party.findById(req.params.id)
-    .then(party => party.remove().then(() => {
-        User.findOne({_id: req.params.userid}).then(user => {
-            if(user) {
-                user.updateOne({party: null}).then(() => res.json({success: "Party removed"})).catch(err => console.log(err))
-            }
-        }).catch(err => console.log(err))
+    .then(party => party.deleteOne().then((party) => {
+        for(let i=0; i<party.users.length; i++) {
+            User.findOne({_id: party.users[i]._id}).then(user => {
+                if(user) {
+                    user.updateOne({party: null}).catch(err => console.log(err))
+                }
+            }).catch(err => console.log(err));
+        }
+        res.json({success: "Party Removed"});
     })
     )
     .catch(err => res.status(404).json({failed: "Could not delete party"}))
 });
 
 //  @route  POST api/party/remove/:id
-//  @desc   Removes user from party. Only should be called if party doesn't have 1 user.
+//  @desc   Removes 1 user from party. Only should be called if party has more than 1 user.
 //  @access Private
 router.post("/remove/:id", auth, (req, res) => {
     Party.findByIdAndUpdate({_id: req.params.id}, {$pull: {users: {_id: req.body.userid}}}, {new: true},
