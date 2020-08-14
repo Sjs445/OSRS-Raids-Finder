@@ -68,6 +68,18 @@ export const removeFromParty = (id, userid) => (dispatch, getState) => {
             .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
+export const changeLeader = (id, userid, rsn) => (dispatch, getState) => {
+    const body = JSON.stringify({userid, rsn});
+
+    axios
+        .post(`/api/party/changeleader/${id}`, body, tokenConfig(getState)).then(res => 
+            dispatch({
+                type: UPDATE_PARTY,
+                payload: res.data.party
+            })
+            ).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+}
+
 
 export const setPartiesLoading = () => {
     return {

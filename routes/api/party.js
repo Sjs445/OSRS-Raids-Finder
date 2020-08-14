@@ -97,7 +97,7 @@ router.delete("/:id", auth, (req, res) =>{
         res.json({success: "Party Removed"});
     })
     )
-    .catch(err => res.status(404).json({failed: "Could not delete party"}))
+    .catch(err => res.status(404).json(err))
 });
 
 //  @route  POST api/party/remove/:id
@@ -111,6 +111,20 @@ router.post("/remove/:id", auth, (req, res) => {
                 return;
             }
             User.findOne({_id: req.body.userid}).then(user => user.updateOne({party: null}).then(() => res.json({party})).catch(error => console.log(error)))
+        })
+});
+
+//  @route  POST api/party/changeleader/:id
+//  @desc   Removes 1 user from party and updates the leader of the party.
+router.post("/changeleader/:id", auth, (req, res) => {
+    Party.findByIdAndUpdate({_id: req.params.id}, {$pull: {users: {_id: req.body.userid}}}, {new: true}, 
+        (err, party) => {
+            if(err) {
+                console.log(err);
+                return;
+            }
+            User.findOne({_id: req.body.userid}).then(user => user.updateOne({party: null}).then(() => party.updateOne({partyLeader: req.body.rsn}, {new: true})
+            .then((party) => res.json({party}))).catch(error => console.log(error)))
         })
 })
 

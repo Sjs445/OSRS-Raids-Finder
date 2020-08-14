@@ -7,6 +7,7 @@ import { Container, Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import CreatePartyModal from "../modal/createPartyModal";
 import RemovePartyModal from "../modal/removePartyModal";
+import LeavePartyModal from "../modal/leavePartyModal";
 import store from '../../store';
 import { loadUser } from '../../actions/authActions';
 
@@ -51,7 +52,8 @@ componentDidMount() {
         
         const { parties } = this.props.party;
         const { user } = this.props;
-        return (<div>
+        return (
+        <div>
             <NavBar />
         <h1 style={{textAlign: "center", margin: "1rem"}}>Welcome to the dashboard {this.props.user.name}</h1>
             <Container>
@@ -69,17 +71,15 @@ componentDidMount() {
                                 onClick={this.onJoinClick.bind(this, _id)}>Join Party</Button>
                                 }
                                 {user.party === _id &&
-                                    <Button color="danger"
-                                    style={{margin: ".5rem"}}
-                                    onClick={this.onLeaveClick.bind(this, _id, index)}>Leave Party</Button>
+                                    <LeavePartyModal index={index} />
                                 }
                                 {user.rsn === partyLeader &&
                                 <RemovePartyModal partyid={_id} />
                                 }
                                     <b>Raid Type:</b> {raidType} <b>Clan Chat:</b> { clanChat } <b>Party Leader:</b> {partyLeader}
                                     <br /><b>Users:</b>
-                                {users.map(({id, rsn}, index) => (
-                                <CSSTransition key={id} timeout={500} className="">
+                                {users.map(({_id, rsn}, index) => (
+                                <CSSTransition key={_id} timeout={500} className="">
                                     <ListGroupItem>
                                      <b>{index+1}.</b> {rsn}
                                     </ListGroupItem>
