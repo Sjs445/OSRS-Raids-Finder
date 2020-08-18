@@ -16,6 +16,8 @@ import NavBar from './navbar';
 
 class dashboard extends React.Component {
 
+    intervalID;
+
 onDeleteClick = (id) => {
     this.props.deleteParty(id);
 }
@@ -44,6 +46,18 @@ componentDidUpdate(prevProps) {
 componentDidMount() {
     this.props.getParties();
 }
+
+componentWillUnmount() {
+    clearTimeout(this.intervalID);
+}
+
+getData = () => {
+    store.dispatch(loadUser());
+    this.props.getParties();
+
+    this.intervalID = setTimeout(this.getData.bind(this), 5000);
+}
+
     render() {
         if(!this.props.isAuthenticated)
         {

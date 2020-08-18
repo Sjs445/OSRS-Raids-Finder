@@ -32,7 +32,14 @@ class LeavePartyModal extends Component {
 
         const partyLeader = this.state.partyLeader;
         //  Make an action to modify the party leader
-        console.log(partyLeader)
+        if(!partyLeader) {
+            alert("You must select a user!");
+            return;
+        }
+        
+        this.props.changeLeader(this.props.party.parties[this.props.index]._id,
+            this.props.user._id, partyLeader);
+            
         this.toggle();
     }
 
@@ -75,15 +82,13 @@ class LeavePartyModal extends Component {
                                         <FormGroup>
                                             <Label for="partyLeader">New Leader</Label>
                                             <Input type="select" name="partyLeader" id="partyLeader" 
-                                            onChange={ (e) => {
-                                                this.onChange(e)
-                                            }}
+                                            onChange={this.onChange}
                                             value={this.state.partyLeader}
                                             >
+                                                {/* Have a blank option so the user must change it. */}
+                                                <option></option>
                                                 {party.users.map(({_id, rsn}) => (
-                                                    // <CSSTransition key={_id} timeout={500}>    
                                                     <option key={_id} disabled={rsn===party.partyLeader} value={rsn}>{rsn}</option>
-                                                    // </CSSTransition>
                                                 ))}
                                             </Input>
                                         </FormGroup>
