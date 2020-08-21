@@ -8,6 +8,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import CreatePartyModal from "../modal/createPartyModal";
 import RemovePartyModal from "../modal/removePartyModal";
 import LeavePartyModal from "../modal/leavePartyModal";
+import ViewUserModal from "../modal/viewUserModal";
 import store from '../../store';
 import { loadUser } from '../../actions/authActions';
 
@@ -95,7 +96,7 @@ getData = () => {
                                 {users.map(({_id, rsn}, index) => (
                                 <CSSTransition key={_id} timeout={500} className="">
                                     <ListGroupItem>
-                                     <b>{index+1}.</b> {rsn}
+                                     <b>{index+1}.</b> <ViewUserModal rsn={rsn} userid={_id}/>
                                     </ListGroupItem>
                                 </CSSTransition>
                             ))}

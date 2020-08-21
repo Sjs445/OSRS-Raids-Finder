@@ -6,10 +6,16 @@ const mongoose = require("mongoose");
 const xssFilters = require("xss-filters");
 const users = require("./routes/api/users");
 const party = require("./routes/api/party");
-
+const cors = require("cors");
 //	CSP for security: Only allows scripts, links, photos from the server itself.
 const csp = require("helmet-csp");
 const app = express();
+
+//	Allow cors from the front end.
+//	On deployment we will need to change this.
+app.use(cors({
+	origin: 'http://localhost:3000'
+}));
 
 //  Body Parser Middleware
 app.use(express.json());

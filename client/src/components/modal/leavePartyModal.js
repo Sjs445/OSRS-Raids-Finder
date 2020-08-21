@@ -3,7 +3,6 @@ import { Button, Modal, ModalHeader, ModalBody, Alert, Form, FormGroup, Label, I
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { removeFromParty, deleteParty, changeLeader } from '../../actions/partyActions';
-import { CSSTransition } from 'react-transition-group';
 
 class LeavePartyModal extends Component {
     state = {
