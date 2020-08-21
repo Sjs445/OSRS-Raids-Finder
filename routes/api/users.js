@@ -4,6 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../../middleware/auth");
+const highscores =  require("runescape-api/osrs");
 
 //  Needed to connect to our MongoDB server
 const keys = require("../../config/keys");
@@ -13,6 +14,7 @@ const User = require("../../models/user");
 //  Import Validation Functions
 const validateLogin = require("../../validation/login");
 const validateRegister = require("../../validation/register");
+
 
 // @route POST api/users/register
 // @desc Register user
@@ -130,7 +132,25 @@ router.get("/data", auth, (req, res) => {
         .select('-password')
         .then(user => res.json(user))
         .catch(err => console.log(err));
-})
+});
+
+//  @route  GET api/users/:id
+//  @desc   GET users data and highscores
+//  @access Private
+router.get("/:id", auth, (req, res) => {
+
+    User.findById(req.params.id)
+    .select('-password')
+    .then(user => 
+        highscores.hiscores.getPlayer(user.rsn, "normal").then(data => {
+            console.log(data)
+            res.json(data);
+        }).catch(error => res.status(400).json({error: "Runescape highscores API is currently down."}))
+         )
+    .catch(err =>  res.status(404).json(err));
+    
+
+});
 
 
 module.exports = router;

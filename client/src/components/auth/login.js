@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';
-import { Container, Row, Col, Button, Form, FormGroup, Label, Input, FormText, FormFeedback, Spinner } from 'reactstrap';
+import { Container, Col, Button, Form, FormGroup, Label, Input, FormFeedback, Spinner } from 'reactstrap';
 import classnames from 'classnames';
 
 class Login extends Component {

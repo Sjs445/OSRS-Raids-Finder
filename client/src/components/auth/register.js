@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
-import { Container, Row, Col, Button, Form, FormGroup, FormText, Label, Input, FormFeedback, Alert, Spinner } from 'reactstrap';
+import { Container, Col, Button, Form, FormGroup, FormText, Label, Input, FormFeedback, Spinner } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { register } from '../../actions/authActions';
 import { clearErrors } from '../../actions/errorActions';

@@ -1,5 +1,4 @@
-import React, { Component, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import {
     Collapse,
     Navbar,
@@ -7,12 +6,7 @@ import {
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    NavbarText
+    NavLink
   } from 'reactstrap';
 import Logout from '../auth/logout';
 

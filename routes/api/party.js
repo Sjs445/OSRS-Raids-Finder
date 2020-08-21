@@ -81,13 +81,51 @@ router.post("/:id", auth, (req, res) => {
 
 });
 
-//  @route  DELETE api/party/:id
-//  @desc   deletes a party by id
+//  @route  DELETE api/party/:id/:userid
+//  @desc   deletes a party by id and removes party from all users.
 //  @access Private
 router.delete("/:id", auth, (req, res) =>{
     Party.findById(req.params.id)
-    .then(party => party.remove().then(() => res.json({success: "Party removed."})))
-    .catch(err => res.status(404).json({failed: "Could not delete party"}))
+    .then(party => party.deleteOne().then((party) => {
+        for(let i=0; i<party.users.length; i++) {
+            User.findOne({_id: party.users[i]._id}).then(user => {
+                if(user) {
+                    user.updateOne({party: null}).catch(err => console.log(err))
+                }
+            }).catch(err => console.log(err));
+        }
+        res.json({success: "Party Removed"});
+    })
+    )
+    .catch(err => res.status(404).json(err))
 });
+
+//  @route  POST api/party/remove/:id
+//  @desc   Removes 1 user from party. Only should be called if party has more than 1 user.
+//  @access Private
+router.post("/remove/:id", auth, (req, res) => {
+    Party.findByIdAndUpdate({_id: req.params.id}, {$pull: {users: {_id: req.body.userid}}}, {new: true},
+        (err, party) => {
+            if(err) {
+                console.log(err);
+                return;
+            }
+            User.findOne({_id: req.body.userid}).then(user => user.updateOne({party: null}).then(() => res.json({party})).catch(error => console.log(error)))
+        })
+});
+
+//  @route  POST api/party/changeleader/:id
+//  @desc   Removes 1 user from party and updates the leader of the party.
+router.post("/changeleader/:id", auth, (req, res) => {
+    Party.findByIdAndUpdate({_id: req.params.id}, {$pull: {users: {_id: req.body.userid}}}, {new: true}, 
+        (err, party) => {
+            if(err) {
+                console.log(err);
+                return;
+            }
+            User.findOne({_id: req.body.userid}).then(user => user.updateOne({party: null}).then(() => party.updateOne({partyLeader: req.body.rsn}, {new: true})
+            .then((party) => res.json({party}))).catch(error => console.log(error)))
+        })
+})
 
 module.exports = router;
