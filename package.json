@@ -14,15 +14,15 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "bootstrap": "^4.5.0",
-    "concurrently": "^5.2.0",
+    "bootstrap": "^4.5.2",
+    "concurrently": "^5.3.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet-csp": "^2.10.0",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.22",
+    "mongoose": "^5.10.2",
     "runescape-api": "^2.1.1",
     "validator": "^13.1.1",
     "xss-filters": "^1.2.7"
