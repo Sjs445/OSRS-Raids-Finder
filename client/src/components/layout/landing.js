@@ -45,9 +45,18 @@ class Landing extends Component {
                     <p>Users can find raid parties within minutes by opening a party for a specific type of raid. Once the user opens the party
                         it will be visible to other users in the dashboard. Other users can then view and decide if they want to join the party.
                     </p>
-                    <h3>How do I know if people in the party are not noobs?</h3>
-                    <p>The OSRS raids finder uses Runescape's highscore api to show you the stats and kill count of the users in the party. From here you can decide
-                        whether or not to join the party. 
+                    <h3>How can I trust other users to split with me?</h3>
+                    <p>There will be a reputation points system for each user. If a user has been reported by other users that they have not split,
+                        there will be warning before joining a party with the user.
+                    </p>
+                    <h3>I want to teach others how to raid.</h3>
+                    <p>When signing up you can select the option to be a raid guide. This will give you a special icon as a guide so others will know. If you don't select guide 
+                        when signing up you can always decide to be one by changing your account in setup. Other users will give you a rating and feedback on your guides which can earn
+                        you guide points.
+                    </p>
+                    <h3>What if I'm just learning raids?</h3>
+                    <p>Depending on how many raids you have completed will give you a status such as beginner, intermediate, expert. This helps identify your abilities to other users.
+                        If you're just learning raids try to find at least one user in a party who is a guide. The guide will have a special icon to show they are a guide.
                     </p>
                     <h2>Follow us for updates</h2>
                     <div className={styles.social}>
