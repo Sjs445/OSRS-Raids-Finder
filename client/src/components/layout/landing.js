@@ -44,18 +44,21 @@ class Landing extends Component {
                     <h3>How does it work?</h3>
                     <p>Users can find raid parties within minutes by opening a party for a specific type of raid. Once the user opens the party
                         it will be visible to other users in the dashboard. Other users can then view and decide if they want to join the party.
-                    </p>
-                    <h3>How can I trust other users to split with me?</h3>
-                    <p>There will be a reputation points system for each user. If a user has been reported by other users that they have not split,
-                        there will be warning before joining a party with the user.
-                    </p>
-                    <h3>I want to teach others how to raid.</h3>
-                    <p>When signing up you can select the option to be a raid guide. This will give you a special icon as a guide so others will know. If you don't select guide 
+                    </p><br />
+                    <h3>A reputation system run by the community.</h3>
+                    <p>There will be a reputation points system for each user. If a user has been reported by other users that they have not split or were simply not helpful at all during the raid,
+                        there will be a warning before joining a party advising the poor reputation of the user.
+                    </p><br />
+                    <h3>Raid guides.</h3>
+                    <p>When signing up you can select the option to be a raid guide. This will give you a special icon <img src={"https://oldschool.runescape.wiki/images/a/a2/Quests.png?f5120"} className={styles.iconSize} alt="Quest Icon" title={"Raid Guide"} /> as a guide so others will know. If you don't select guide 
                         when signing up you can always decide to be one by changing your account in setup. Other users will give you a rating and feedback on your guides which can earn
                         you guide points.
-                    </p>
+                    </p><br />
                     <h3>What if I'm just learning raids?</h3>
-                    <p>Depending on how many raids you have completed will give you a status such as beginner, intermediate, expert. This helps identify your abilities to other users.
+                    <p>Depending on how many raids you have completed will give you a status such as beginner <img src={"https://oldschool.runescape.wiki/images/thumb/e/ef/Clue_scroll_%28beginner%29_detail.png/150px-Clue_scroll_%28beginner%29_detail.png?87067"} className={styles.iconSize} alt="Beginner Icon" title={"Beginner"} />,
+                     novice <img src={"https://oldschool.runescape.wiki/images/thumb/3/36/Clue_scroll_%28easy%29_detail.png/150px-Clue_scroll_%28easy%29_detail.png?87067"} className={styles.iconSize} alt="Novice Icon" title={"Novice"} />,
+                      intermediate <img src={"https://oldschool.runescape.wiki/images/thumb/1/16/Clue_scroll_%28medium%29_detail.png/150px-Clue_scroll_%28medium%29_detail.png?87067"} className={styles.iconSize} alt="Intermediate Icon" title={"Intermediate"} />,
+                       or expert <img src={"https://oldschool.runescape.wiki/images/thumb/d/d2/Clue_scroll_%28hard%29_detail.png/150px-Clue_scroll_%28hard%29_detail.png?11ee4"} className={styles.iconSize} alt="Expert Icon" title={"Expert"} />. This helps identify your abilities to other users.
                         If you're just learning raids try to find at least one user in a party who is a guide. The guide will have a special icon to show they are a guide.
                     </p>
                     <h2>Follow us for updates</h2>

@@ -99,3 +99,8 @@ span:hover{
     opacity: .8;
     margin: 30px 0;
 }
+
+.iconSize{
+    height: 25px;
+    width: 25px;
+}
