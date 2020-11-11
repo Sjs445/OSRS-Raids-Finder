@@ -45,7 +45,7 @@ componentDidUpdate(prevProps) {
 }
 
 componentDidMount() {
-    this.props.getParties();
+    this.getData();
 }
 
 componentWillUnmount() {
