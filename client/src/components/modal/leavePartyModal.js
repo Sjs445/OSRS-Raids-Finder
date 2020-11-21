@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, Alert, Form, FormGroup, Label, Input } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { removeFromParty, deleteParty, changeLeader } from '../../actions/partyActions';
+import { removeFromParty, deleteParty, changeLeader, getParties } from '../../actions/partyActions';
 
 class LeavePartyModal extends Component {
     state = {
@@ -38,6 +38,7 @@ class LeavePartyModal extends Component {
         
         this.props.changeLeader(this.props.party.parties[this.props.index]._id,
             this.props.user._id, partyLeader);
+        
             
         this.toggle();
     }
@@ -122,7 +123,8 @@ LeavePartyModal.propTypes = {
     party: PropTypes.object.isRequired,
     removeFromParty: PropTypes.func.isRequired,
     deleteParty: PropTypes.func.isRequired,
-    changeLeader: PropTypes.func.isRequired
+    changeLeader: PropTypes.func.isRequired,
+    getParties: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -130,4 +132,4 @@ const mapStateToProps = state => ({
     party: state.party
 });
 
-export default connect(mapStateToProps, { removeFromParty, deleteParty, changeLeader })(LeavePartyModal);
+export default connect(mapStateToProps, { removeFromParty, deleteParty, changeLeader, getParties })(LeavePartyModal);

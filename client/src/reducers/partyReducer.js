@@ -1,4 +1,4 @@
-import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, UPDATE_PARTY, PARTIES_LOADING} from '../actions/types';
+import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, UPDATE_PARTY, PARTIES_LOADING, UPDATE_PARTY_LEADER} from '../actions/types';
 
 const initialState = {
     parties: [],
@@ -26,6 +26,14 @@ export default function(state = initialState, action) {
                     : party
                 )
             };
+        case UPDATE_PARTY_LEADER:
+            return {
+                ...state,
+                parties: state.parties.map(
+                    (party) => party._id === action.payload._id ? {...party, partyLeader: action.payload.partyLeader}
+                    : party
+                    )
+            }
         case ADD_PARTY:
             return {
                 ...state,

@@ -20,6 +20,8 @@ module.exports = function validRegister(data) {
     let name = xssFilters.inHTMLData(data.name);
     let rsn = xssFilters.inHTMLData(data.rsn);
 
+    let isGuide = data.isGuide;
+
     //  Check for empty name
     if(validator.isEmpty(name)) {
         errors.name = "Name is required.";
@@ -57,6 +59,7 @@ module.exports = function validRegister(data) {
         name,
         email,
         rsn,
-        password
+        password,
+        isGuide
     };  
 };

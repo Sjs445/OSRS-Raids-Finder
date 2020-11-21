@@ -28,9 +28,9 @@ export const addParty = (party) => (dispatch, getState) => {
         .catch( err =>  dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
-export const joinParty = (id, rsn, userid) => (dispatch, getState) => {
+export const joinParty = (id, rsn, userid, isGuide) => (dispatch, getState) => {
 
-    const body = JSON.stringify({ rsn, userid });
+    const body = JSON.stringify({ rsn, userid, isGuide });
 
     axios
         .post(`/api/party/${id}`, body, tokenConfig(getState))
@@ -75,7 +75,7 @@ export const changeLeader = (id, userid, rsn) => (dispatch, getState) => {
         .post(`/api/party/changeleader/${id}`, body, tokenConfig(getState)).then(res => 
             dispatch({
                 type: UPDATE_PARTY,
-                payload: res.data.party
+                payload: res.data.newParty
             })
             ).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }

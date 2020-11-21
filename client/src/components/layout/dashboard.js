@@ -24,7 +24,7 @@ onDeleteClick = (id) => {
 }
 
 onJoinClick = (id) => {
-    this.props.joinParty(id, this.props.user.rsn, this.props.user._id);
+    this.props.joinParty(id, this.props.user.rsn, this.props.user._id, this.props.user.isGuide);
 }
 
 onLeaveClick = (id, index) => {
@@ -69,8 +69,11 @@ getData = () => {
         const { user } = this.props;
         return (
         <div>
-            <NavBar />
-        <h1 style={{textAlign: "center", margin: "1rem"}}>Welcome to the dashboard {this.props.user.name}</h1>
+            <NavBar username={user.name} isGuide={user.isGuide}/>
+        <h1 style={{textAlign: "center", margin: "1rem"}}>OSRS Raids Finder
+        </h1>
+
+        
             <Container>
                 {!user.party &&
                 <CreatePartyModal />
@@ -93,10 +96,10 @@ getData = () => {
                                 }
                                     <b>Raid Type:</b> {raidType} <b>Clan Chat:</b> { clanChat } <b>Party Leader:</b> {partyLeader}
                                     <br /><b>Users:</b>
-                                {users.map(({_id, rsn}, index) => (
+                                {users.map(({_id, rsn, isGuide}, index) => (
                                 <CSSTransition key={_id} timeout={500} className="">
                                     <ListGroupItem>
-                                     <b>{index+1}.</b> <ViewUserModal rsn={rsn} userid={_id}/>
+                                     <b>{index+1}.</b> <ViewUserModal isGuide={isGuide} rsn={rsn} userid={_id}/>
                                     </ListGroupItem>
                                 </CSSTransition>
                             ))}

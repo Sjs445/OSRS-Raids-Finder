@@ -8,7 +8,9 @@ import {
     NavItem,
     NavLink
   } from 'reactstrap';
+import NavbarText from "reactstrap/lib/NavbarText";
 import Logout from '../auth/logout';
+import styles from '../../styles/landing.module.css';
 
 const NavBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -35,6 +37,10 @@ const NavBar = (props) => {
                             <Logout />
                         </NavItem>
                     </Nav>
+                    <NavbarText>Logged in as, {props.username}&nbsp;
+                    {props.isGuide &&
+                        <img src={"https://oldschool.runescape.wiki/images/a/a2/Quests.png?f5120"} className={styles.iconSize} alt="Quest Icon" title={"Raid Guide"} />
+                    }</NavbarText>
                     </Collapse>
                 </Navbar>
             </div>

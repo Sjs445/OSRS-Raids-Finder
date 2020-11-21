@@ -18,3 +18,4 @@ export const ADD_PARTY = "ADD_PARTY";
 export const DELETE_PARTY = "DELETE_PARTY";
 export const PARTIES_LOADING = "PARTIES_LOADING";
 export const UPDATE_PARTY = "UPDATE_PARTY";
+export const UPDATE_PARTY_LEADER = "UPDATE_PARTY_LEADER";

@@ -18,11 +18,15 @@ const UserSchema = new Schema({
   rsn:  {
     type: String,
     required: true,
-    unique: true
+    unique: false
   },
   party: {
       type: String,
       required: false
+  },
+  isGuide: {
+    type: Boolean,
+    required: true
   },
   createDate: {
     type: Date,

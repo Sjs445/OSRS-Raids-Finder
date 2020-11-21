@@ -19,7 +19,8 @@ class Register extends Component {
             errors: {},
             validate: {
                 emailState: "",
-            }
+            },
+            isGuide: false
         };
 
     }
@@ -55,6 +56,12 @@ class Register extends Component {
         this.setState({ [e.target.id]: e.target.value})
     };
 
+    onCheckChange = () => {
+        this.setState({
+            isGuide: !this.state.isGuide
+        })
+    };
+
     onSubmit = async(e) => {
         e.preventDefault();
 
@@ -63,7 +70,8 @@ class Register extends Component {
             email: this.state.email,
             password: this.state.password,
             password2: this.state.password2,
-            rsn: this.state.rsn
+            rsn: this.state.rsn,
+            isGuide: this.state.isGuide
         }
 
         //  Attempt to register
@@ -185,6 +193,21 @@ class Register extends Component {
                             </FormGroup>
                         </Col>
                         <Col>
+                            <FormGroup check>
+                                <Label for="isGuide" check>
+                                <Input type="checkbox"
+                                name="isGuide"
+                                id="isGuide"
+                                checked={this.state.isGuide}
+                                onChange={this.onCheckChange}
+                                value={this.state.isGuide}
+                                />{' '}
+                                I would like to be a raid guide
+                                </Label>
+                            </FormGroup>
+                        </Col>
+                        <Col>
+                        <br />
                             <FormGroup>
                             <Button type="submit" value="Submit">Submit</Button>
                             </FormGroup>

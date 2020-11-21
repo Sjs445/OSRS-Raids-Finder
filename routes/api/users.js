@@ -25,7 +25,7 @@ router.post("/register", (req, res) =>{
     //  We also retrive name, email, rsn, and password because we want to
     //  use the XSS Filtered inputs that we already filtered in the validation file.
     //  isValid tells us if we have any errors.
-    const { errors, isValid, name, email, rsn, password } = validateRegister(req.body);
+    const { errors, isValid, name, email, rsn, password, isGuide } = validateRegister(req.body);
 
     //  Check if all input is valid
     if(!isValid) {
@@ -42,7 +42,8 @@ router.post("/register", (req, res) =>{
                 name: name,
                 email: email,
                 password: password,
-                rsn: rsn
+                rsn: rsn,
+                isGuide: isGuide
             });
 
             //  Generate 10 rounds of salting and hash.

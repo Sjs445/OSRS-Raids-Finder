@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { tokenConfig } from '../../actions/authActions';
+import styles from '../../styles/landing.module.css';
 
 import store from '../../store';
 
@@ -40,7 +41,11 @@ class ViewUserModal extends Component {
         const { loading, user } = this.state;
         return (
             <div>
-                <a href="#" onClick={this.toggle}>{this.props.rsn}</a>
+                <a href="#" onClick={this.toggle}>{this.props.rsn}&nbsp;
+                {this.props.isGuide && 
+                <img src={"https://oldschool.runescape.wiki/images/a/a2/Quests.png?f5120"} className={styles.iconSize} alt="Quest Icon" title={"Raid Guide"} />
+                }
+                </a>
                 <Modal
                     isOpen={this.state.modal}
                     toggle={this.toggle}

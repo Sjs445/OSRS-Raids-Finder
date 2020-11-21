@@ -32,6 +32,7 @@ router.get("/all", auth, (req, res) =>{
 //  @desc creates a new party
 //  @access Private
 router.post("/new", auth, (req, res) => {
+    //  Scrubbing user input for XSS or bad input
     const { errors, isValid, raidType, clanChat, users, partyLeader } = validateParty(req.body);
 
     //  If user input is not valid throw error
@@ -39,20 +40,34 @@ router.post("/new", auth, (req, res) => {
         return res.status(400).json({errors});
     }
 
-    let partyObj = new Party({ raidType, clanChat, users, partyLeader });
+    
+    User.findById(users[0]._id).then(userResult => {
+        if(userResult) {
+            Object.defineProperty(users[0], 'isGuide', {
+                value: userResult.isGuide,
+                enumerable: true,
+                writable: false
+            })
 
-    //  Create party and assign party id to the user who created it
-    partyObj.save().then(data => {
-        User.findById(users[0]._id).then(user => {
-            if(user) {
-                user.updateOne({party: data._id}).then(() => {
-                    res.json(data);
-                })
-                .catch(error => console.log(error))
-            }
-        }).catch(error => console.log(error))
+
+            let partyObj = new Party({ raidType, clanChat, users, partyLeader });
+
+            //  Create party and assign party id to the user who created it
+            partyObj.save().then(data => {
+                        userResult.updateOne({party: data._id}).then(() => {
+                            res.json(data);
+                        })
+
+            })
+            .catch(err => console.log(err));
+
+        }
     })
-    .catch(err => console.log(err));
+    .catch(error => console.log(error))
+
+    
+
+    
 });
 
 //  @route  POST api/party/:id
@@ -64,20 +79,17 @@ router.post("/:id", auth, (req, res) => {
         return res.json({error: "Invalid Body. Could not add user to party."});
     }
 
-    Party.findByIdAndUpdate({_id: req.params.id}, {$push: {users: {_id: req.body.userid, rsn: req.body.rsn}}}, {new: true},
-        function(err, party) {
-            if(err) {
-                console.log(err);
-                return;
-            }
-            User.findOne({_id: req.body.userid}).then(user => {
-                if(user) {
-                    user.updateOne({party: party._id}).then(() => res.json({party}))
-                    .catch(error => console.log(error));
+    User.findById(req.body.userid).then(userResult => {
+        Party.findByIdAndUpdate({_id: req.params.id}, {$push: {users: {_id: req.body.userid, rsn: req.body.rsn, isGuide: req.body.isGuide}}}, {new: true},
+            function(err, party) {
+                if(err) {
+                    console.log(err);
                     return;
                 }
+                userResult.updateOne({party: party._id}).then(() => res.json({party})).catch(error => console.log(error));
+                return;
             })
-        })
+    }).catch(err => console.log(err))
 
 });
 
@@ -116,6 +128,7 @@ router.post("/remove/:id", auth, (req, res) => {
 
 //  @route  POST api/party/changeleader/:id
 //  @desc   Removes 1 user from party and updates the leader of the party.
+//  @access Private
 router.post("/changeleader/:id", auth, (req, res) => {
     Party.findByIdAndUpdate({_id: req.params.id}, {$pull: {users: {_id: req.body.userid}}}, {new: true}, 
         (err, party) => {
@@ -123,9 +136,22 @@ router.post("/changeleader/:id", auth, (req, res) => {
                 console.log(err);
                 return;
             }
-            User.findOne({_id: req.body.userid}).then(user => user.updateOne({party: null}).then(() => party.updateOne({partyLeader: req.body.rsn}, {new: true})
-            .then((party) => res.json({party}))).catch(error => console.log(error)))
-        })
+        User.findByIdAndUpdate({_id: req.body.userid}, {party: null})
+        .then(
+            Party.findByIdAndUpdate({_id: req.params.id}, {$set: {partyLeader: req.body.rsn}}, {new: true},
+                (error, newParty) => {
+                    if(error) {
+                        console.log(error);
+                        return;
+                    }
+                    res.json({newParty});
+                })
+
+        )
+
+        }).catch(error => console.log(error));
+    
+            
 })
 
 module.exports = router;
