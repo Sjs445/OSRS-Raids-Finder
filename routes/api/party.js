@@ -151,14 +151,13 @@ router.post("/changeleader/:id", auth, (req, res) => {
         User.findByIdAndUpdate({_id: req.body.userid}, {party: null})
         .then(
             Party.findByIdAndUpdate({_id: req.params.id}, {$set: {partyLeader: req.body.rsn}}, {new: true},
-                (error, party) => {
+                (error, partychangedleader) => {
                     if(error) {
                         console.log(error);
                         return;
                     }
-                    console.log({party})
-                  messageBus.emit('message', {party});
-                  res.json({party});
+                  messageBus.emit('message', {partychangedleader});
+                  res.json({partychangedleader});
                 })
         )
         }).catch(error => console.log(error));
@@ -169,7 +168,14 @@ router.post("/changeleader/:id", auth, (req, res) => {
 //  @desc   Allows users to listen at this endpoint for changes using long polling.
 //  @access Private
 router.get("/listener", auth, (req, res) => {
+
+    //  If there is no reponse for 20 minutes. End the connection.
+    res.setTimeout(1200000, () => {
+        res.status(408).json({error: 'Connection Timeout'});
+    });
+
     let addMessageListener = function(res) {
+        console.log(messageBus.listenerCount())
         messageBus.once('message', function(data) {
             res.json(data);
         })

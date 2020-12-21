@@ -72,11 +72,16 @@ export const changeLeader = (id, userid, rsn) => (dispatch, getState) => {
     const body = JSON.stringify({userid, rsn});
 
     axios
-        .post(`/api/party/changeleader/${id}`, body, tokenConfig(getState)).then(res => 
+        .post(`/api/party/changeleader/${id}`, body, tokenConfig(getState)).then(res => {
             dispatch({
                 type: UPDATE_PARTY,
-                payload: res.data.party
+                payload: res.data.partychangedleader
             })
+            dispatch({
+                type: UPDATE_PARTY_LEADER,
+                payload: res.data.partychangedleader
+            })
+            }
             ).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
@@ -109,7 +114,20 @@ export const subscribe = () => (dispatch, getState) => {
                     payload: res.data.createdParty
                 })
             }
+            else if(res.data.partychangedleader) {
+                dispatch({type: UPDATE_PARTY, payload: res.data.partychangedleader})
+                dispatch({type: UPDATE_PARTY_LEADER, payload: res.data.partychangedleader})
+            }
          }
-        ).catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
-        .finally(() => subscribe())
+        ).catch(err => {
+            console.log(JSON.stringify(err))
+            if(err.status === 408) {
+                console.log('Timeout: Issuing another request.');
+                subscribe();
+            }
+            else{
+                dispatch(returnErrors(err.message, err.stack));
+            }
+        }
+        )
 }
