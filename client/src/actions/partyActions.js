@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { tokenConfig } from './authActions';
 import { returnErrors } from './errorActions';
-import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, PARTIES_LOADING, UPDATE_PARTY} from './types';
+import { GET_PARTIES, ADD_PARTY, DELETE_PARTY, PARTIES_LOADING, UPDATE_PARTY, UPDATE_PARTY_LEADER} from './types';
 
 export const getParties = () => (dispatch, getState) => {
     dispatch(setPartiesLoading());
@@ -22,7 +22,7 @@ export const addParty = (party) => (dispatch, getState) => {
         .then(res => 
             dispatch({
                 type: ADD_PARTY,
-                payload: res.data
+                payload: res.data.createdParty
             })
             )
         .catch( err =>  dispatch(returnErrors(err.response.data, err.response.status)));
@@ -75,7 +75,7 @@ export const changeLeader = (id, userid, rsn) => (dispatch, getState) => {
         .post(`/api/party/changeleader/${id}`, body, tokenConfig(getState)).then(res => 
             dispatch({
                 type: UPDATE_PARTY,
-                payload: res.data.newParty
+                payload: res.data.party
             })
             ).catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
@@ -85,4 +85,31 @@ export const setPartiesLoading = () => {
     return {
         type: PARTIES_LOADING
     }
+}
+
+export const subscribe = () => (dispatch, getState) => {
+    axios
+        .get('/api/party/listener', tokenConfig(getState)).then(res => {
+
+            if(res.data.party) {
+                dispatch({
+                    type: UPDATE_PARTY,
+                    payload: res.data.party
+                })
+            }
+            else if(res.data.id) {
+                dispatch({
+                    type: DELETE_PARTY,
+                    payload: res.data.id
+                })
+            }
+            else if(res.data.createdParty) {
+                dispatch({
+                    type: ADD_PARTY,
+                    payload: res.data.createdParty
+                })
+            }
+         }
+        ).catch(err => dispatch(returnErrors(err.response.data, err.response.status)))
+        .finally(() => subscribe())
 }

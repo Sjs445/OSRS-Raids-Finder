@@ -3,6 +3,12 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
 
+// Event Emitter Modules for LongPolling
+let EventEmitter = require('events').EventEmitter;
+let messageBus = new EventEmitter();
+// Allows 100 max people to listen 
+messageBus.setMaxListeners(100);
+
 //  Needed to connect to our MongoDB server
 const keys = require("../../config/keys");
 
@@ -22,7 +28,7 @@ router.get("/all", auth, (req, res) =>{
             return res.json({party});
         }
         else{
-            return res.status(404).json("No posts found");
+            return res.status(404).json("No parties found");
         }
     })
     .catch(err => console.log(err));
@@ -53,9 +59,10 @@ router.post("/new", auth, (req, res) => {
             let partyObj = new Party({ raidType, clanChat, users, partyLeader });
 
             //  Create party and assign party id to the user who created it
-            partyObj.save().then(data => {
-                        userResult.updateOne({party: data._id}).then(() => {
-                            res.json(data);
+            partyObj.save().then(createdParty => {
+                        userResult.updateOne({party: createdParty._id}).then(() => {
+                            messageBus.emit('message', {createdParty});
+                            res.json({createdParty})
                         })
 
             })
@@ -64,9 +71,6 @@ router.post("/new", auth, (req, res) => {
         }
     })
     .catch(error => console.log(error))
-
-    
-
     
 });
 
@@ -86,7 +90,10 @@ router.post("/:id", auth, (req, res) => {
                     console.log(err);
                     return;
                 }
-                userResult.updateOne({party: party._id}).then(() => res.json({party})).catch(error => console.log(error));
+                userResult.updateOne({party: party._id})
+                .then(() => messageBus.emit('message', {party}))
+                .then(() => res.json({party}))
+                .catch(error => console.log(error));
                 return;
             })
     }).catch(err => console.log(err))
@@ -106,7 +113,8 @@ router.delete("/:id", auth, (req, res) =>{
                 }
             }).catch(err => console.log(err));
         }
-        res.json({success: "Party Removed"});
+        messageBus.emit('message', {success: "Party removed", id: req.params.id});
+        res.json({success: "Party removed", id: req.params.id});
     })
     )
     .catch(err => res.status(404).json(err))
@@ -122,7 +130,11 @@ router.post("/remove/:id", auth, (req, res) => {
                 console.log(err);
                 return;
             }
-            User.findOne({_id: req.body.userid}).then(user => user.updateOne({party: null}).then(() => res.json({party})).catch(error => console.log(error)))
+            User.findOne({_id: req.body.userid})
+            .then(user => user.updateOne({party: null})
+            .then(() =>  messageBus.emit('message', {party}))
+            .then(() => res.json({party}))
+            .catch(error => console.log(error)))
         })
 });
 
@@ -131,7 +143,7 @@ router.post("/remove/:id", auth, (req, res) => {
 //  @access Private
 router.post("/changeleader/:id", auth, (req, res) => {
     Party.findByIdAndUpdate({_id: req.params.id}, {$pull: {users: {_id: req.body.userid}}}, {new: true}, 
-        (err, party) => {
+        (err, response) => {
             if(err) {
                 console.log(err);
                 return;
@@ -139,19 +151,30 @@ router.post("/changeleader/:id", auth, (req, res) => {
         User.findByIdAndUpdate({_id: req.body.userid}, {party: null})
         .then(
             Party.findByIdAndUpdate({_id: req.params.id}, {$set: {partyLeader: req.body.rsn}}, {new: true},
-                (error, newParty) => {
+                (error, party) => {
                     if(error) {
                         console.log(error);
                         return;
                     }
-                    res.json({newParty});
+                    console.log({party})
+                  messageBus.emit('message', {party});
+                  res.json({party});
                 })
-
         )
-
         }).catch(error => console.log(error));
     
-            
 })
+
+//  @route  GET api/party/listener
+//  @desc   Allows users to listen at this endpoint for changes using long polling.
+//  @access Private
+router.get("/listener", auth, (req, res) => {
+    let addMessageListener = function(res) {
+        messageBus.once('message', function(data) {
+            res.json(data);
+        })
+    }
+    addMessageListener(res);
+});
 
 module.exports = router;

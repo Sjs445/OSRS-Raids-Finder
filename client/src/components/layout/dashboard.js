@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { getParties, deleteParty, joinParty, removeFromParty } from '../../actions/partyActions';
+import { getParties, deleteParty, joinParty, removeFromParty, subscribe } from '../../actions/partyActions';
 import PropTypes from 'prop-types';
 import { Container, Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -16,8 +16,6 @@ import NavBar from './navbar';
 
 
 class dashboard extends React.Component {
-
-    intervalID;
 
 onDeleteClick = (id) => {
     this.props.deleteParty(id);
@@ -41,22 +39,13 @@ onLeaveClick = (id, index) => {
 componentDidUpdate(prevProps) {
     if(this.props.party.parties !== prevProps.party.parties) {
         store.dispatch(loadUser());
+        this.props.subscribe();
     }
 }
 
 componentDidMount() {
-    this.getData();
-}
-
-componentWillUnmount() {
-    clearTimeout(this.intervalID);
-}
-
-getData = () => {
-    store.dispatch(loadUser());
     this.props.getParties();
-
-    this.intervalID = setTimeout(this.getData.bind(this), 5000);
+    this.props.subscribe();
 }
 
     render() {
@@ -120,7 +109,8 @@ dashboard.propTypes = {
     isAuthenticated: PropTypes.bool,
     user: PropTypes.object,
     joinParty: PropTypes.func.isRequired,
-    removeFromParty: PropTypes.func.isRequired
+    removeFromParty: PropTypes.func.isRequired,
+    subscribe: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -129,4 +119,4 @@ const mapStateToProps = (state) => ({
     user: state.auth.user
 })
 
-export default connect(mapStateToProps, { getParties, deleteParty, joinParty, removeFromParty })(dashboard);
+export default connect(mapStateToProps, { getParties, deleteParty, joinParty, removeFromParty, subscribe })(dashboard);
