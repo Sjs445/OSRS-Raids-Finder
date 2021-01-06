@@ -14,20 +14,21 @@ const app = express();
 
 //	Allow cors from the front end.
 //	On deployment we will need to change this.
-app.use(cors({
-	origin: 'http://localhost:3000'
-}));
+//app.use(cors({
+//	origin: 'http://localhost:3000'
+//}));
+app.use(cors());
 
 //  Body Parser Middleware
 app.use(express.json());
 
 //  Declaring csp headers
-app.use(csp({
-	directives:{
-		defaultSrc: ["'self'"],
-		scriptSrc: ["'self'"],
-	}
-}));
+//app.use(csp({
+//	directives:{
+//		defaultSrc: ["'self'"],
+//		scriptSrc: ["'self'"],
+//	}
+//}));
 
 //  MongoDB Configuration
 const db = require("./config/keys").mongoURI;
