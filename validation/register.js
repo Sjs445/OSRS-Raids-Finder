@@ -6,12 +6,14 @@ const isEmpty = require("is-empty");
 module.exports = function validRegister(data) {
     //  Create Object for errors 
     let errors = {};
-// Convert empty fields to an empty string so we can use validator functions
+    
+    // Convert empty fields to an empty string so we can use validator functions
     data.name = !isEmpty(data.name) ? data.name : "";
     data.email = !isEmpty(data.email) ? data.email : "";
     data.password = !isEmpty(data.password) ? data.password : "";
     data.password2 = !isEmpty(data.password2) ? data.password2 : "";
     data.rsn = !isEmpty(data.rsn) ? data.rsn: "";
+    data.botAnswer = !isEmpty(data.botAnswer) ? data.botAnswer: "";
 
     //  Filter req.body with xssFilters to avoid XSS attacks
     let email = xssFilters.inHTMLData(data.email);
@@ -19,8 +21,10 @@ module.exports = function validRegister(data) {
     let password2 = xssFilters.inHTMLData(data.password2);
     let name = xssFilters.inHTMLData(data.name);
     let rsn = xssFilters.inHTMLData(data.rsn);
+    let botAnswer = xssFilters.inHTMLData(data.botAnswer);
 
     let isGuide = data.isGuide;
+
 
     //  Check for empty name
     if(validator.isEmpty(name)) {
@@ -40,6 +44,14 @@ module.exports = function validRegister(data) {
         errors.rsn = "RSN required.";
     }
 
+    // Check for bot validator
+    if(validator.isEmpty(botAnswer)) {
+        errors.botAnswer = "Please answer the basic math problem.";
+    }
+    else if((parseInt(data.botValidator.num1, 10)+parseInt(data.botValidator.num2, 10)) != parseInt(botAnswer, 10)) {
+        errors.botAnswer = "Sorry, you got the answer wrong. Please try again."
+    }
+
     //  Check for empty passwords, length, matching...
     if(validator.isEmpty(password)) {
         errors.password = "Password is required.";
@@ -53,6 +65,7 @@ module.exports = function validRegister(data) {
     if(!validator.equals(password, password2)) {
         errors.password2 = "Passwords do not match.";
     }
+
     return {
         errors,
         isValid: isEmpty(errors),

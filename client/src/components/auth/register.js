@@ -20,7 +20,12 @@ class Register extends Component {
             validate: {
                 emailState: "",
             },
-            isGuide: false
+            isGuide: false,
+            botValidator: {
+                num1: Math.floor(Math.random() * Math.floor(10)),
+                num2: Math.floor(Math.random() * Math.floor(10)),
+            },
+            botAnswer: ""
         };
 
     }
@@ -71,7 +76,9 @@ class Register extends Component {
             password: this.state.password,
             password2: this.state.password2,
             rsn: this.state.rsn,
-            isGuide: this.state.isGuide
+            isGuide: this.state.isGuide,
+            botValidator: this.state.botValidator,
+            botAnswer: this.state.botAnswer
         }
 
         //  Attempt to register
@@ -123,6 +130,7 @@ class Register extends Component {
         }
         
         const { errors } = this.state;
+        const { botValidator } = this.state;
         return(
             <div>
             <Container>
@@ -202,8 +210,20 @@ class Register extends Component {
                                 onChange={this.onCheckChange}
                                 value={this.state.isGuide}
                                 />{' '}
-                                I would like to be a raid guide
+                                I would like to be a raid guide <br /><br />
                                 </Label>
+                            </FormGroup>
+                        </Col>
+                        <Col>
+                            <FormGroup>
+                                <Label for="botAnswer"><i class="fa fa-id-card" aria-hidden="true"></i>&nbsp;Please answer this question to prove you're human: {botValidator.num1}+{botValidator.num2} = </Label>
+                                <Input type="text" name="botAnswer" id="botAnswer"
+                                onChange={this.onChange}
+                                value={this.state.botAnswer}
+                                className={classnames("", {
+                                    invalid: errors.botAnswer
+                                })} />
+                                <span style={{color: "red"}}>{errors.botAnswer}</span>
                             </FormGroup>
                         </Col>
                         <Col>
